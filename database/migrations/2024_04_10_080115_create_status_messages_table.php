@@ -11,17 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('whatsapp_send_outs', function (Blueprint $table) {
+        Schema::create('status_messages', function (Blueprint $table) {
             $table->id();
             $table->softDeletes();
-            
-            $table->char('from', length: 24);
-            $table->char('to', length: 24);
-            $table->char('message_type', length: 24);
-            $table->text('text')->nullable();
-            $table->char('channel', length: 24);
+            $table->json('content');
             $table->timestamps();
-
         });
     }
 
@@ -30,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('whatsapp_send_outs');
+        Schema::dropIfExists('status_messages');
     }
 };

@@ -21,7 +21,14 @@ return new class extends Migration
             $table->id();
             $table->softDeletes();
 
-            $table->json('content')->nullable();
+            $table->char('from', length: 24);
+            $table->char('to', length: 24);
+            $table->char('message_type', length: 24);
+            $table->text('text')->nullable();
+            $table->char('channel', length: 24);
+            $table->char('message_uuid', length: 64);
+            $table->char('context_status', length: 24)->nullable();
+            $table->json('profile')->nullable();
             $table->timestamps();
 
         });
@@ -35,3 +42,4 @@ return new class extends Migration
         Schema::dropIfExists('whatsapp_webhooks');
     }
 };
+

@@ -14,13 +14,6 @@ class WhatsppController extends Controller
 
     //-----------------------------------------------------------
     public function inboundMessageAPI(Request $request)  {
-		
-		$response = array(
-			"timeStamp" => Date("YmdHis"),
-			"apiName" => __FUNCTION__,
-			"status" => -99,
-			"message" => "Unexpected error...",
-		);
 
 		$webhook = WhatsappWebhook::create([
 			"to" 	=> $request->to,
@@ -34,18 +27,19 @@ class WhatsppController extends Controller
 		]);
 
 		$sender = $request->from;
-
+		$array = [];
 		if (str_contains($request->text, '我想返崇拜')){
-			$messaga = "星期六3:00pm期待見你";
+			$imageText = [];
+			$imageText["url"] = public_path("godplus.jpeg");
+			$imageText["caption"] = "期待星期六3pm見到你。";
+			$array["image"] = $imageText;
 		}else{
-			$messaga = "The message you give me: ".$request->text;
+			$array["message_type"] = "text";
+			$array["text"] = "The message you give me: ".$request->text;
 		}
 
-		$array = [];
 		$array["from"] = "14157386102";
 		$array["to"] = $sender;
-		$array["message_type"] = "text";
-		$array["text"] = $messaga;
 		$array["channel"] = "whatsapp";
 		$json = json_encode($array);
 
@@ -73,7 +67,7 @@ class WhatsppController extends Controller
 				"to" 	=> $array["from"],
 				"from" 	=> $array["from"],
 				"message_type" => $array["message_type"],
-				"text" => $array["text"],
+				"text" => $array[$array["message_type"]],
 				"channel" => $array["channel"],
 			]);
 		}
@@ -84,12 +78,6 @@ class WhatsppController extends Controller
     //-----------------------------------------------------------
     public function statusAPI(Request $request)  {
 
-		$response = array(
-			"timeStamp" => Date("YmdHis"),
-			"apiName" => __FUNCTION__,
-			"status" => -99,
-			"message" => "Unexpected error...",
-		);
 
 		$webhook = statusMessage::create([
 			"content" => json_encode($request->all()),

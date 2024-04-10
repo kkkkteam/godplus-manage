@@ -29,15 +29,18 @@ class WhatsppController extends Controller
 		$sender = $request->from;
 		$array = [];
 		if (str_contains($request->text, '我想返崇拜')){
-			$imageText = [];
-			$imageText["url"] = public_path("godplus.jpeg");
-			$imageText["caption"] = "期待星期六3pm見到你。";
-			$array["image"] = $imageText;
+			// $array["message_type"] = "image";
+			// $tempContent = [];
+			// $tempContent["url"] = asset('storage/images/godplus.jpeg');
+			// $tempContent["caption"] = "God+ 😃 星期六3:00pm期待見你";
+			$array["message_type"] = "text";	
+			$tempContent = "God+ 😃 星期六3:00pm期待見你";
 		}else{
-			$array["message_type"] = "text";
-			$array["text"] = "The message you give me: ".$request->text;
+			$array["message_type"] = "text";	
+			$tempContent = "The message you give me: ".$request->text;
 		}
 
+		$array[$array["message_type"]] = $tempContent;
 		$array["from"] = "14157386102";
 		$array["to"] = $sender;
 		$array["channel"] = "whatsapp";
@@ -45,16 +48,16 @@ class WhatsppController extends Controller
 
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
-		CURLOPT_URL => 'https://messages-sandbox.nexmo.com/v1/messages',
-		CURLOPT_RETURNTRANSFER => true,
-		CURLOPT_ENCODING => '',
-		CURLOPT_MAXREDIRS => 10,
-		CURLOPT_TIMEOUT => 0,
-		CURLOPT_FOLLOWLOCATION => true,
-		CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		CURLOPT_CUSTOMREQUEST => 'POST',
-		CURLOPT_POSTFIELDS => $json,
-		CURLOPT_HTTPHEADER => array(
+			CURLOPT_URL => 'https://messages-sandbox.nexmo.com/v1/messages',
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'POST',
+			CURLOPT_POSTFIELDS => $json,
+			CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/json',
 				'Accept: application/json',
 				'Authorization: Basic ZmZmZTEzODM6OVNPYnQyaU4zdVdGWFNrbg=='
@@ -64,10 +67,10 @@ class WhatsppController extends Controller
 		$response = curl_exec($curl);
 		if($response){
 			WhatsappSendOut::create([
-				"to" 	=> $array["from"],
+				"to" 	=> $array["to"],
 				"from" 	=> $array["from"],
 				"message_type" => $array["message_type"],
-				"text" => $array[$array["message_type"]],
+				"text" => json_encode($array[$array["message_type"]], true),
 				"channel" => $array["channel"],
 			]);
 		}
@@ -78,8 +81,7 @@ class WhatsppController extends Controller
     //-----------------------------------------------------------
     public function statusAPI(Request $request)  {
 
-
-		$webhook = statusMessage::create([
+		$status = statusMessage::create([
 			"content" => json_encode($request->all()),
 		]);
 

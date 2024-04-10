@@ -22,10 +22,43 @@ class WhatsppController extends Controller
 			"content" => json_encode($request->all()),
 		]);
 
-		//  Output now
-		$response["status"] = 0;
-		$response["message"] = "Done";
-		return response()->json($response);
+		$sender = $request->from;
+
+		if (str_contains($request->text, '我想返崇拜')){
+			$messaga = "星期六3:00pm期待見你";
+		}else{
+			$messaga = "The message you give me: ".$request->text;
+		}
+
+		$array = [];
+		$array["from"] = "14157386102";
+		$array["to"] = $sender;
+		$array["message_type"] = "text";
+		$array["text"] = $messaga;
+		$array["channel"] = "whatsapp";
+		$json = json_encode($array);
+
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+		CURLOPT_URL => 'https://messages-sandbox.nexmo.com/v1/messages',
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_ENCODING => '',
+		CURLOPT_MAXREDIRS => 10,
+		CURLOPT_TIMEOUT => 0,
+		CURLOPT_FOLLOWLOCATION => true,
+		CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		CURLOPT_CUSTOMREQUEST => 'POST',
+		CURLOPT_POSTFIELDS => $json,
+		CURLOPT_HTTPHEADER => array(
+				'Content-Type: application/json',
+				'Accept: application/json',
+				'Authorization: Basic ZmZmZTEzODM6OVNPYnQyaU4zdVdGWFNrbg=='
+			),
+		));
+
+		$response = curl_exec($curl);
+		curl_close($curl);
+
 	}
 
     //-----------------------------------------------------------
@@ -41,10 +74,45 @@ class WhatsppController extends Controller
 			"content" => json_encode($request->all()),
 		]);
 
+		$sender = $request->from;
+
+		if (str_contains($request->text, '我想返崇拜')){
+			$messaga = "星期六3:00pm期待見你";
+		}else{
+			$messaga = "The message you give me: ".$request->text;
+		}
+
+		$array = [];
+		$array["from"] = "14157386102";
+		$array["to"] = $sender;
+		$array["message_type"] = "text";
+		$array["text"] = $messaga;
+		$array["channel"] = "whatsapp";
+		$json = json_encode($array);
+
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+		CURLOPT_URL => 'https://messages-sandbox.nexmo.com/v1/messages',
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_ENCODING => '',
+		CURLOPT_MAXREDIRS => 10,
+		CURLOPT_TIMEOUT => 0,
+		CURLOPT_FOLLOWLOCATION => true,
+		CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		CURLOPT_CUSTOMREQUEST => 'POST',
+		CURLOPT_POSTFIELDS => $json,
+		CURLOPT_HTTPHEADER => array(
+				'Content-Type: application/json',
+				'Accept: application/json',
+				'Authorization: Basic ZmZmZTEzODM6OVNPYnQyaU4zdVdGWFNrbg=='
+			),
+		));
+
+		$response = curl_exec($curl);
+		curl_close($curl);
+
 		//  Output now
-		$response["status"] = 0;
-		$response["message"] = "Done";
-		return response()->json($response);
+
 	}
 
 }

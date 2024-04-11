@@ -23,7 +23,7 @@ class WhatsppController extends Controller
 			"channel" => $request->channel,
 			"message_uuid" => $request->message_uuid,
 			"context_status" => $request->context_status,
-			"profile" => json_encode($request->profile),
+			"profile" => json_encode($request->profile, JSON_UNESCAPED_UNICODE),
 		]);
 
 		$sender = $request->from;
@@ -70,7 +70,7 @@ class WhatsppController extends Controller
 				"to" 	=> $array["to"],
 				"from" 	=> $array["from"],
 				"message_type" => $array["message_type"],
-				"text" => json_encode($array[$array["message_type"]], true),
+				"text" => json_encode($array[$array["message_type"]], JSON_UNESCAPED_UNICODE),
 				"channel" => $array["channel"],
 			]);
 		}
@@ -82,7 +82,7 @@ class WhatsppController extends Controller
     public function statusAPI(Request $request)  {
 
 		$status = statusMessage::create([
-			"content" => json_encode($request->all()),
+			"content" => json_encode($request->all(), JSON_UNESCAPED_UNICODE),
 		]);
 
 	}

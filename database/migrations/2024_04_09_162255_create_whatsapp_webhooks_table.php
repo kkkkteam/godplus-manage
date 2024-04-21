@@ -23,16 +23,35 @@ return new class extends Migration
 
             $table->char('from', length: 24);
             $table->char('to', length: 24);
-            $table->char('message_type', length: 24);
-            $table->text('text')->nullable();
-            $table->char('channel', length: 24);
-            $table->char('message_uuid', length: 64);
-            $table->char('context_status', length: 24)->nullable();
-            $table->json('profile')->nullable();
+            $table->char('message_type', length: 24)->nullable();
+            $table->char('sms_sid', length: 64)->nullable();
+            $table->char('status', length: 24)->nullable();
+            $table->text('body')->nullable();
+            $table->char('profile_name', length: 64)->nullable();
+            $table->json('content');
+
             $table->timestamps();
 
         });
     }
+
+    // {
+    // 	"SmsMessageSid": "SMba01076f7c52da2596b81f93d9d58101",
+    // 	"NumMedia": "0",
+    // 	"ProfileName": "Kay Ng",
+    // 	"MessageType": "text",
+    // 	"SmsSid": "SMba01076f7c52da2596b81f93d9d58101",
+    // 	"WaId": "85297359017",
+    // 	"SmsStatus": "received",
+    // 	"Body": "Testing and work for gp",
+    // 	"To": "whatsapp:+14155238886",
+    // 	"NumSegments": "1",
+    // 	"ReferralNumMedia": "0",
+    // 	"MessageSid": "SMba01076f7c52da2596b81f93d9d58101",
+    // 	"AccountSid": "ACee09d2a5c91f189f5eb3e49c6b0e9cce",
+    // 	"From": "whatsapp:+85297359017",
+    // 	"ApiVersion": "2010-04-01"
+    // }
 
     /**
      * Reverse the migrations.

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->char('surname_zh', length: 8)->nullable();
             $table->char('lastname_zh', length: 8)->nullable();
             $table->char('nickname', length: 24)->nullable();
+            $table->char('email', length: 128)->nullable();
             $table->char('mobile', length: 24);
             $table->date('birthday');
             $table->date('baptized_at')->nullable();
@@ -28,6 +29,7 @@ return new class extends Migration
             $table->json('academic')->nullable();
             $table->json('relation')->nullable();
             $table->text('remark')->nullable();
+            $table->text('photo')->nullable();
 
             $table->timestamps();
         });

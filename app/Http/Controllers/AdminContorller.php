@@ -10,17 +10,19 @@ class AdminContorller extends Controller
     //-----------------------------------------------------------
     public function joinMemberView(Request $request)  {
         
-        $mobile = $request->mobile ?? "";
+        // $mobile = $request->mobile ?? "";
+        $mobile = "98001234";
 
-        view ('join_member',[
-            "mobile" => $mobile
-        ]);
+        return view('join_member');
     }
     
 
     //-----------------------------------------------------------
-    public function joinMemberAPI(Request $request)  {
+    public function createMemberAPI()  {
+
+
     
     }
 
+    
 }

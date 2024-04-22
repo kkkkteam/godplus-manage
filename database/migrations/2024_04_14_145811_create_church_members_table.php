@@ -22,7 +22,7 @@ return new class extends Migration
             $table->char('lastname_zh', length: 8)->nullable();
             $table->char('nickname', length: 24)->nullable();
             $table->char('mobile', length: 24);
-            $table->date('birthday')->nullable();
+            $table->date('birthday');
             $table->date('baptized_at')->nullable();
             $table->char('gender', length: 8)->nullable();
             $table->json('academic')->nullable();

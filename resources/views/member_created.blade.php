@@ -17,16 +17,7 @@
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50">
         <div>
-            @if($errors->any())
-                {{ implode('', $errors->all('<div>:message</div>')) }}
-            @endif
-
-            {!! Form::open(array('url' => '/church_members', 'files'=>true)) !!}
-@foreach($fields as $field)
-@include('partials.formFields',['field' => $field, 'requiredFields'=> $requiredFields ?? []])
-@endforeach
-                {!! Form::submit('Save',['class'=>'btn btn-primary']) !!}
-            {!! Form::close() !!}
+            Your account created.
         </div>
     </body>
 </html>

@@ -26,7 +26,6 @@ return new class extends Migration
             $table->date('birthday')->nullable();
             $table->char('gender', length: 8)->nullable();
             $table->date('baptized_at')->nullable();
-            $table->char('gender', length: 8)->nullable();
             $table->json('academic')->nullable();
             $table->json('relation')->nullable();
             $table->text('remark')->nullable();

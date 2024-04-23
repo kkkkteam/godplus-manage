@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\EmailController;
+
 use Illuminate\Http\Request;
 use App\Models\ChurchMember;
 
@@ -34,7 +36,9 @@ class AdminContorller extends Controller
         if ($array["status"] == 0) {           
 
             $response["name"] = $name;
-            $response["url"] = route('member.success.html', ["name"=>$name]);
+            // $response["url"] = route('member.success.html', ["name"=>$name]);
+
+            $email = EmailController::sendNewMemberEmail($name, $request->email);
 
         } elseif ($array["status"] == 1) {
 

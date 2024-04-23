@@ -181,7 +181,7 @@
                         if(result.status == 0){
                             // window.location.replace(result.url) ;
                             alert(result.name+" 歡迎你成為GodPlus一份子😊");
-                            window.location.replace("https://godplus.org/") ;
+                            // window.location.replace("https://godplus.org/") ;
                         }else{
                             // reload the current page
                             alert(result.error);

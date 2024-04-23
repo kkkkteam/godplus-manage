@@ -17,6 +17,7 @@ return new class extends Migration
 
             $table->text('command');
             $table->text('reply');
+            $table->text('reply_with_name');
             $table->datetime('start_at')->nullable();
             $table->datetime('end_at')->nullable();
             $table->boolean('valid')->default(0);

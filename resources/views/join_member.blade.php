@@ -179,9 +179,8 @@
 					url: "{{ route('member.join.api') }}",
 					success: function (result)  {
                         if(result.status == 0){
-                            // window.location.replace(result.url) ;
                             alert(result.name+" 歡迎你成為GodPlus一份子😊");
-                            // window.location.replace("https://godplus.org/") ;
+                            window.location.href = "https://godplus.org/" ;
                         }else{
                             // reload the current page
                             alert(result.error);

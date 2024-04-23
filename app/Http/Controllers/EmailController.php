@@ -21,7 +21,7 @@ class EmailController extends Controller
 		$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = 587;  
 
-		$mail->setFrom(env("MAIL_FROM_ADDRESS",""), env("MAIL_FROM_NAME",""));
+		$mail->setFrom(env("MAIL_FROM_ADDRESS",""), "God Plus 神家");
 
 		$mail->isHTML(true);
 		$mail->CharSet = "UTF-8";
@@ -49,16 +49,13 @@ class EmailController extends Controller
             $mail->Body = $html;
             $mail->AddAddress($email);
 
-		    if( !$mail->send() ) {
-                return back()->with("failed", "Email not sent.")->withErrors($mail->ErrorInfo);
-            }else {
-                return back()->with("success", "Email has been sent.");
-            }
- 
+		    $sendResult = $mail->Send();
+
         } catch (Exception $e) {
              return back()->with('error','Message could not be sent.');
         }
 
+        return $sendResult;
 	}
 
 }

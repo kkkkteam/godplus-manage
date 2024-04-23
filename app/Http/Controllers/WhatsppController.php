@@ -9,6 +9,7 @@ use App\Models\WhatsappWebhook;
 use App\Models\WhatsappSendOut;
 use App\Models\StatusMessage;
 use App\Models\ChatCommand;
+use App\Models\ChurchMember;
 
 //-----------------------------------------------------------
 class WhatsppController extends Controller
@@ -102,6 +103,8 @@ class WhatsppController extends Controller
 			"content" => json_encode($request->all(), JSON_UNESCAPED_UNICODE),
 		]);
 
+		return $status;
+
 	}
 
 	//-----------------------------------------------------------
@@ -127,10 +130,16 @@ class WhatsppController extends Controller
 	//-----------------------------------------------------------
 	public function messageLogic($mobile, $message)  {
 
-		$resultMessage = ChatCommand::where("valid", true)->where("command", $message)->inRandomOrder()->first();
-
+		$resultMessage = ChatCommand::where("command", $message)->inRandomOrder()->first();
+		
 		if ($resultMessage){
-			$messageOut = $resultMessage->reply;
+			$member = ChurchMember::where("mobile", "852".$mobile)->first();
+			if ($member){
+				$name = $member->nickname ?? $member->surname_zh;
+				$messageOut = str_replace("__NAME__", $name, $resultMessage->reply_with_name);
+			}else{
+				$messageOut = $resultMessage->reply;
+			}
 		} else {
 			$messageOut = "The message you give me: ".$message;
 		}

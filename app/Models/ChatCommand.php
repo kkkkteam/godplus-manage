@@ -9,4 +9,10 @@ class ChatCommand extends Model
 {
     use HasFactory;
     protected $guarded = [];  
+
+    //-------------------------------------------------
+    public static function getList(){
+        $list = self::all();
+        return $list ;
+    }
 }

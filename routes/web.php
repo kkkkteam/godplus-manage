@@ -18,3 +18,33 @@ Route::prefix('/member')
         
 });
 
+
+Route::prefix('/admin')
+    ->name('admin.')
+    ->group(function(){
+
+        Route::prefix('/whatsapp-list')
+            ->name('command.')
+            ->group(function(){
+
+                Route::get('/', [AdminContorller::class, 'commandListView'])->name('list.html');
+                Route::get('/list', [AdminContorller::class, 'getCommandListAPI'])->name('get.list.api');
+                Route::post('/set', [AdminContorller::class, 'setCommandAPI'])->name('set.api');
+                Route::post('/delete', [AdminContorller::class, 'deleteCommandAPI'])->name('delete.api');
+
+                Route::post('/action', [AdminContorller::class, 'updateActionAPI'])->name('update.action');
+                Route::get('/update', [AdminContorller::class, 'updateCommandView'])->name('update.html');
+                Route::post('/update-action', [AdminContorller::class, 'updateCommandAPI'])->name('update.api');
+                
+
+        });
+
+        Route::prefix('/service')
+            ->name('service.')
+            ->group(function(){
+
+        });
+
+});
+
+

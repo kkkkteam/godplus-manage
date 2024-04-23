@@ -14,6 +14,7 @@ Route::prefix('/member')
 
         Route::get('/join', [AdminContorller::class, 'joinMemberView'])->name('join.html');
         Route::post('/join/submit', [AdminContorller::class, 'joinMemberPI'])->name('join.api');
+        Route::get('/join/success', [AdminContorller::class, 'successMemberView'])->name('success.html');
         
 });
 

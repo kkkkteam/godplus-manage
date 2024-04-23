@@ -12,9 +12,12 @@ class ChurchMember extends Eloquent
     use HasFactory;
     protected $guarded = []; 
     
+    // ------------------------------------------------------------------------------------------
     public static function createMember($informationArray, $mobile)  {
-
-        $member = ChurchMember::where("mobile", $mobile)->first();
+        
+        $member = ChurchMember::where("mobile", "852".$mobile)->first();
+        $result = [];
+        $result["status"] = 10;
 
         if (!$member) {
             do{
@@ -24,10 +27,18 @@ class ChurchMember extends Eloquent
 
             $member = new self;
             $member->fill($informationArray);
-            $member->slug = $slug;
+            $member->slug   = $slug;
+            $member->mobile = "852".$mobile;
             $member->save();
+
+            $result["status"] = 0;
+        }else{
+            // already have reocrd
+            $result["status"] = 1;
         }
-        
-        return $member;
+
+        $result["member"] = $member;
+
+        return $result;
     }
 }

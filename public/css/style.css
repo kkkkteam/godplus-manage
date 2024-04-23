@@ -8,10 +8,21 @@ body {
 h2 {
     color: #555;
     margin-bottom: 20px;
+    transform: translateX(20%);
 }
 
 h2 img{
-    width: 34%;
+    width: 35%;
+}
+
+h4{
+    color: #555;
+    font-weight: 400;
+}
+
+name{
+    color: #2A77D5;
+    font-weight: bold;
 }
 
 form {
@@ -19,10 +30,18 @@ form {
     border-radius: 5px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    max-width: 800px;
+    max-width: 650px;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
+}
+
+#successForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 5%;
 }
 
 @media screen and (max-width: 500px) {

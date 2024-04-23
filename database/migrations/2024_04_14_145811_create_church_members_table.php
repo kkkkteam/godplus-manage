@@ -18,12 +18,13 @@ return new class extends Migration
             $table->char('slug', length: 24);
             $table->char('surname_en', length: 64)->nullable();
             $table->char('lastname_en', length: 48)->nullable();
-            $table->char('surname_zh', length: 8)->nullable();
-            $table->char('lastname_zh', length: 8)->nullable();
+            $table->char('surname_zh', length: 8);
+            $table->char('lastname_zh', length: 8);
             $table->char('nickname', length: 24)->nullable();
-            $table->char('email', length: 128)->nullable();
+            $table->char('email', length: 128);
             $table->char('mobile', length: 24);
-            $table->date('birthday');
+            $table->date('birthday')->nullable();
+            $table->char('gender', length: 8)->nullable();
             $table->date('baptized_at')->nullable();
             $table->char('gender', length: 8)->nullable();
             $table->json('academic')->nullable();

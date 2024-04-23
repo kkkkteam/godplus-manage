@@ -166,7 +166,7 @@
                 }
 
                 var formData = $("#applicationForm").serialize();
-console.log(formData);
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -178,20 +178,22 @@ console.log(formData);
                     dataType: "json",
 					url: "{{ route('member.join.api') }}",
 					success: function (result)  {
-
                         if(result.status == 0){
+                            // window.location.replace(result.url) ;
                             alert(result.name+" 歡迎你成為GodPlus一份子😊");
+                            window.location.replace("https://godplus.org/") ;
+                        }else{
+                            // reload the current page
+                            alert(result.error);
+                            window.location.reload();
                         }
-                        window.location.replace("https://godplus.org");
-
 					},
 					error: function (XMLHttpRequest, textStatus, errorThrown)  {
 						// alert("Oops...\n#"+textStatus+": "+errorThrown);
 					}
 				});
-
-               
             }
         </script>
+
     </body>
 </html>

@@ -50,7 +50,7 @@ class WhatsppController extends Controller
 			"content" 		=> json_encode($request->all(), JSON_UNESCAPED_UNICODE),
 		]);
 
-		$messageOut = $this->messageLogic(str_replace("whatsapp:+","",$receiver),$bodyMessage );
+		$messageOut = $this->messageLogic(str_replace("whatsapp:+","",$sender),$bodyMessage );
 		$messageArray = [
 			"From" 	=> $receiver,
 			"To" 	=> $sender,
@@ -133,10 +133,11 @@ class WhatsppController extends Controller
 		$resultMessage = ChatCommand::where("command", $message)->inRandomOrder()->first();
 		
 		if ($resultMessage){
-			$member = ChurchMember::where("mobile", "852".$mobile)->first();
+			$member = ChurchMember::where("mobile", $mobile)->first();
+
 			if ($member){
 				$name = $member->nickname ?? $member->surname_zh;
-				$messageOut = str_replace("__NAME__", $name, $resultMessage->reply_with_name);
+				$messageOut = str_replace('__NAME__', $name, $resultMessage->reply_with_name);
 			}else{
 				$messageOut = $resultMessage->reply;
 			}

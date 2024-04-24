@@ -46,7 +46,7 @@
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
         <form id="serviceForm">
-            <h2>參加 God Plus崇拜<img src="{{ url('images/logo.png') }}"></h2>
+            <h3>參加 God Plus崇拜<img src="{{ url('images/logo.png') }}" style="width:100px;"></h3>
             <h5>參加者資料</h5>
             <div class="name-input">
                 <div>
@@ -74,7 +74,7 @@
             </div>
 
             <hr>
-            <h4>有朋友一齊嗎？</h4>
+            <h5>有朋友一齊嗎？</h5>
             <fieldset id="friendsSection">
                 <div class="friend">
                     <div>

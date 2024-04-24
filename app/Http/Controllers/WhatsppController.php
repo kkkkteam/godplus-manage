@@ -137,10 +137,11 @@ class WhatsppController extends Controller
 
 			if ($member){
 				$name = $member->nickname ?? $member->surname_zh;
-				$messageOut = str_replace(['__NAME__','__MOBILE__'], [$name,substr($mobile, 3, 0)], $resultMessage->reply_with_name);
+				$messageOut = str_replace('__NAME__', $name, $resultMessage->reply_with_name);
 			}else{
 				$messageOut = $resultMessage->reply;
 			}
+			$messageOut = str_replace('__MOBILE__',substr($mobile, 3, 8), $messageOut);
 		} else {
 			$messageOut = "The message you give me: ".$message;
 		}

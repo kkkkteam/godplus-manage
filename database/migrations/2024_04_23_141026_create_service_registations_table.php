@@ -15,9 +15,17 @@ return new class extends Migration
             $table->id();
             $table->softDeletes();
 
-            $table->char('mobile', length: 24);
-            $table->char('serivce_slug', length: 24);
+            $table->char('name', length: 24);
+            $table->char('mobile', length: 24)->nullable();
             
+            //newcomer
+            $table->char('recommend_by_name', length: 24)->nullable();
+            $table->char('recommend_by_mobile', length: 24)->nullable();
+            $table->char('age_range')->nullable();
+            $table->boolean('is_newcomer')->default(false);
+
+            $table->char('serivce_slug', length: 24);
+
             $table->timestamps();
         });
     }

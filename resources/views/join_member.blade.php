@@ -176,10 +176,10 @@
 					type: "POST",
 					data: formData,
                     dataType: "json",
-					url: "{{ route('member.join.api') }}",
+					url: "{{ route('memberservice.register.api') }}",
 					success: function (result)  {
                         if(result.status == 0){
-                            alert(result.name+" 歡迎你成為GodPlus一份子😊");
+                            alert(result.name+" 到時見😊");
                             window.location.href = "https://godplus.org/" ;
                         }else{
                             // reload the current page

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->softDeletes();
 
+            $table->char('name', length: 24);
+            $table->char('register_id', length: 8)->nullable();
             $table->char('mobile', length: 24);
             $table->char('serivce_slug', length: 24);
             

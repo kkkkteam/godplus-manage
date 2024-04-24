@@ -30,10 +30,15 @@
             .deleteButton{
                 width: 150px;
             }
+
+            .dt-search{
+                padding-bottom:5px;
+            }
         </style>
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
         <form id="commandForm">
+            <h3>GodPlus+ - Whatsapp List</h3>
             <div>
                 <label for="command">弟兄姊妹需輸入:</label>
                 <input type="text" id="command" name="command" required>

@@ -17,7 +17,7 @@ class ChurchMember extends Eloquent
         
         $member = ChurchMember::where("mobile", "852".$mobile)->first();
         $result = [];
-        $result["status"] = 10;
+        $result["status"] = -1;
 
         if (!$member) {
             do{
@@ -41,4 +41,34 @@ class ChurchMember extends Eloquent
 
         return $result;
     }
+
+        // ------------------------------------------------------------------------------------------
+        public static function createMemberByService($nickname, $mobile)  {
+        
+            $member = ChurchMember::where("mobile", "852".$mobile)->first();
+            $result = [];
+            $result["status"] = -1;
+    
+            if (!$member) {
+                do{
+                    $slug = Str::random(16);
+                    $memberExist = ChurchMember::where("slug", $slug)->first();
+                }while($memberExist);
+    
+                $member = new self;
+                $member->nickname = $nickname;
+                $member->slug   = $slug;
+                $member->mobile = "852".$mobile;
+                $member->save();
+    
+                $result["status"] = 0;
+            }else{
+                // already have reocrd
+                $result["status"] = 1;
+            }
+    
+            $result["member"] = $member;
+    
+            return $result;
+        }
 }

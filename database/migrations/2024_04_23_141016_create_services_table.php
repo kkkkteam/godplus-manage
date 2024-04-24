@@ -20,10 +20,7 @@ return new class extends Migration
             $table->datetime('end_at')->nullable();
             $table->char('title', length: 64);
             $table->char('speaker', length: 24);
-            $table->text('registration_command')->nullable();
-            $table->text('attendance_command')->nullable();
-            $table->boolean('command_valid')->default(false);
-            
+
             $table->timestamps();
         });
     }

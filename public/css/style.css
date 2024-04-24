@@ -111,15 +111,12 @@ button {
     color: white;
     border: none;
     padding: 10px 20px;
-    margin-top: 5px;
+    margin-top: 1px;
+    margin-bottom: 1px;
     cursor: pointer;
     border-radius: 3px;
 }
 
 button:hover {
     background-color: #45a049;
-}
-
-.error {
-    color: red;
 }

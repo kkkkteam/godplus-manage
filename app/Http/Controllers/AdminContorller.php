@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\EmailController;
 
-use App\Models\ChatCommand;
+
 use Illuminate\Http\Request;
 use App\Models\ChurchMember;
+use App\Models\ChatCommand;
 
 class AdminContorller extends Controller
 {
@@ -55,7 +56,7 @@ class AdminContorller extends Controller
 
     //-----------------------------------------------------------
     public function commandListView(Request $request)  {
-        return view("admin.whatsapp_list");
+        return view("admin.whatsapp.list");
     }
 
     //-----------------------------------------------------------
@@ -119,12 +120,12 @@ class AdminContorller extends Controller
 
         if ($command) {
 
-            return view("admin.whatsapp_update",[
+            return view("admin.whatsapp.update",[
                 "whatsapp" => $command,
             ]);
 
         }else{
-            return view("admin.whatsapp_list");
+            return view("admin.whatsapp.list");
         }
 
     }

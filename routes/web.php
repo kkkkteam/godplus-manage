@@ -2,11 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminContorller;
+use App\Http\Controllers\ServiceController;
 
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 
 Route::prefix('/member')
     ->name('member.')
@@ -15,6 +12,9 @@ Route::prefix('/member')
         Route::get('/join', [AdminContorller::class, 'joinMemberView'])->name('join.html');
         Route::post('/join/submit', [AdminContorller::class, 'joinMemberPI'])->name('join.api');
         Route::get('/join/success', [AdminContorller::class, 'successMemberView'])->name('success.html');
+
+        Route::get('/service/join', [ServiceController::class, 'serviceRegisterView'])->name('service.register.html');
+        Route::post('/service/register', [ServiceController::class, 'serviceRegisterAPI'])->name('service.register.api');
         
 });
 
@@ -36,13 +36,19 @@ Route::prefix('/admin')
                 Route::get('/update', [AdminContorller::class, 'updateCommandView'])->name('update.html');
                 Route::post('/update-action', [AdminContorller::class, 'updateCommandAPI'])->name('update.api');
                 
-
         });
 
         Route::prefix('/service')
             ->name('service.')
             ->group(function(){
 
+                Route::get('/', [ServiceController::class, 'serviceListView'])->name('list.html');
+                Route::get('/list', [ServiceController::class, 'getServiceListAPI'])->name('get.list.api');
+                Route::post('/add', [ServiceController::class, 'addServiceAPI'])->name('add.api');
+
+                Route::post('/action', [ServiceController::class, 'updateServiceActionAPI'])->name('update.action');
+                Route::get('/update', [ServiceController::class, 'updateServiceView'])->name('update.html');
+                Route::post('/update', [ServiceController::class, 'updateServiceAPI'])->name('update.api');
         });
 
 });

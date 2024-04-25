@@ -154,7 +154,6 @@
 
                     columnDefs: [
                         {targets:0, width:"20px"},
-
                         {targets:1, visible:false},
                         {targets:2, width:"200px"},
                         {targets:5, data:null, width:"180px", defaultContent:

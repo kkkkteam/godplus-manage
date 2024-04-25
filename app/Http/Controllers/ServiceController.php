@@ -100,7 +100,7 @@ class ServiceController extends Controller
             $service->speaker = $request->speaker;
             $carbon_start= Carbon::parse($request->date." ".$request->time);
             $service->start_at = $carbon_start;
-            $service->end_at = $carbon_start->addHours(2);
+            $service->end_at = date("Y-m-d H:i:s", strtotime($carbon_start, "+2 hours"));
             $service->save();
 
             $response["status"] = 0;
@@ -116,11 +116,19 @@ class ServiceController extends Controller
 
         $mobile = $request->input("m") ?? "";
 
-        $serviceList = Service::where("start_at", ">",Carbon::now())->get();
+        $serviceList = Service::where("start_at", ">",Carbon::now())->select("slug", "start_at","title")->get()->toArray();
+        $array = [];
+        foreach($serviceList as $service){
+            $array[]=[
+                "slug"     => $service["slug"],
+                "title"     => $service["title"],
+                "start_at"  => date("Y-m-d h:ia", strtotime($service["start_at"])),
+            ];
+        }
 
         return view("join_service", [
             "mobile" => $mobile,
-            "serviceList" => $serviceList
+            "serviceList" => $array
         ]);
 
     }
@@ -160,6 +168,7 @@ class ServiceController extends Controller
         }
 
         foreach( $friendDictionary as $friend){
+            if (str($friend["name"])==0) {continue;}
             ServiceRegistation::create([
                 "name" => $friend["name"],
                 "recommend_by_name" => $nameOfApplicatant,
@@ -177,6 +186,11 @@ class ServiceController extends Controller
         }
 
         return response()->json($response);
+    }
+
+    //-----------------------------------------------------------
+    public function scannerView(Request $request){
+        return view("admin.service.scan");
     }
 
 

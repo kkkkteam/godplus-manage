@@ -20,27 +20,55 @@
 
         <style>
             #serviceForm{
-                max-width: 900px;
+                max-width: 600px;
                 width:100%;
             }
 
             .friend{
                 display: flex;
                 flex-direction: row;
-                flex-wrap: nowrap;
-                justify-content: space-between;
+                justify-content:flex-start;
                 margin-bottom:5px;
             }
 
             .friend .friendName{
-                width:250px;
+                width:40%;
+                min-width:250px;
             }
             .friend .friendAge{
-                width:250px;
+                width:30%;
+                min-width:150px;
             }
+
+            @media screen and (max-width: 600px) {
+                .friend .friendName{
+                    min-width:140px;
+                }
+                .friend .friendAge{
+                    min-width:100px;
+                }
+                label{
+                    font-size:.8em;
+                }
+            }
+
             .friend .is_newcomer{
-                width:50px;
-            }             
+               transform: translateY(90%);
+            }
+            
+            .friend input,
+            .friend select{
+                margin-right: 5px;
+            }
+
+            .friend label{
+                margin-right: 5px;
+                white-space: nowrap;
+            }
+
+            button{
+                width:120px;
+            }
 
         </style>
     </head>
@@ -67,7 +95,7 @@
 @if (isset($serviceList) and !empty($serviceList))
                     <option value=''>請選擇</option>
 @foreach ($serviceList as $service)
-                    <option value="{{$service->slug}}">日期：{{$service->start_at ?? ""}} 講題：{{$service->title ?? ""}}</option>
+                    <option value="{{$service["slug"]}}">{{$service["start_at"] ?? ""}} 《{{$service["title"] ?? ""}}》</option>
 @endforeach
 @endif
                 </select>
@@ -97,7 +125,7 @@
                     </div>
                     <div>
                         <label for="is_newcomer">是新朋友？</label>
-                        <input type="checkbox" class="is_newcomer" name="is_newcomer">
+                        <input type="checkbox" class="is_newcomer" name="is_newcomer" >
                     </div>
                 </div>
             </fieldset>
@@ -120,7 +148,7 @@
                 var nameInput = document.getElementById('name');
                 var service = document.getElementById('service').value;
 
-                var name = nameInput.value.trim();
+                var name = nameInput.value;
                 var mobile = mobileInput.value.trim();
 
                 document.querySelectorAll('.error').forEach(el => {
@@ -194,12 +222,15 @@
                 const friendDiv = document.createElement('div');
                 friendDiv.classList.add('friend');
 
+                const nameDiv = document.createElement('div');
                 const nameInput = document.createElement('input');
                 nameInput.type = 'text';
                 nameInput.classList.add('friendName');
                 nameInput.setAttribute('name','friendName');
                 nameInput.required = true;
+                nameDiv.appendChild(nameInput);
 
+                const ageDiv = document.createElement('div');
                 const ageSelect = document.createElement('select');
                 ageSelect.classList.add('friendAge');
                 ageSelect.setAttribute('name','friendAge');
@@ -214,15 +245,18 @@
                     <option value="adult">在職</option>
                     <option value="elderly">長者</option>`;
                 ageSelect.required = true;
+                ageDiv.appendChild(ageSelect);
 
+                const newcomerDiv = document.createElement('div');
                 const newcomerCheckbox = document.createElement('input');
                 newcomerCheckbox.type = 'checkbox';
                 newcomerCheckbox.classList.add('is_newcomer');
                 newcomerCheckbox.setAttribute('name','is_newcomer');
+                newcomerDiv.appendChild(newcomerCheckbox);
 
-                friendDiv.appendChild(nameInput);
-                friendDiv.appendChild(ageSelect);
-                friendDiv.appendChild(newcomerCheckbox);
+                friendDiv.appendChild(nameDiv);
+                friendDiv.appendChild(ageDiv);
+                friendDiv.appendChild(newcomerDiv);
 
                 friendsSection.appendChild(friendDiv);
             }

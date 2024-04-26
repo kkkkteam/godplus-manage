@@ -34,7 +34,9 @@ class ChurchMember extends Eloquent
             $result["status"] = 0;
         }else{
             // already have reocrd
-            $result["status"] = 1;
+            $member->fill($informationArray);
+            $member->save();
+            $result["status"] = 0;
         }
 
         $result["member"] = $member;

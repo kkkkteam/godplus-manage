@@ -54,7 +54,7 @@
             <div class="name-input">
                 <div>
                     <label for="mobile">WhatsApp:*</label>
-                    <input type="text" id="mobile" name="mobile" required>
+                    <input type="text" id="mobile" name="mobile" value="{{ $mobile }}" required>
                     <span id="mobileError" class="error"></span>
                 </div>
                 <div>

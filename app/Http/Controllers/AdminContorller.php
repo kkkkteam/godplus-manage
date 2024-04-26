@@ -15,7 +15,7 @@ class AdminContorller extends Controller
     //-----------------------------------------------------------
     public function joinMemberView(Request $request)  {
         
-        $mobile = $request->input("_m") ?? "";
+        $mobile = $request->input("m") ?? "";
 
         return view('join_member',["mobile" => $mobile]);
     }

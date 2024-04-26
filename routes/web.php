@@ -51,6 +51,9 @@ Route::prefix('/admin')
                 Route::get('/update', [ServiceController::class, 'updateServiceView'])->name('update.html');
                 Route::post('/update', [ServiceController::class, 'updateServiceAPI'])->name('update.api');
 
+                Route::get('/registration', [ServiceController::class, 'registrationListView'])->name('registration.html');
+                Route::get('/registration/list', [ServiceController::class, 'registrationListAPI'])->name('registration.list.api');
+
                 Route::get('/scan/qr-code', [ServiceController::class, 'scannerView'])->name('scan.html');
         });
 

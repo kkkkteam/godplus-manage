@@ -237,7 +237,57 @@ class ServiceController extends Controller
 
         return $reply;
     }
+
+    //-----------------------------------------------------------
+    public function registrationListView(Request $request){
+
+        $serviceList = Service::where("start_at", ">",Carbon::now())->select("slug", "start_at","title")->get()->toArray();
+        $array = [];
+        foreach($serviceList as $service){
+            $array[]=[
+                "slug"     => $service["slug"],
+                "title"     => $service["title"],
+                "start_at"  => date("Y-m-d h:ia", strtotime($service["start_at"])),
+            ];
+        }
+
+        return view("admin.service.registration",[
+            "serviceList" => $array,
+        ]);
+    }
+
+    //-----------------------------------------------------------
+    public function registrationListAPI(Request $request){
+
+        $serviceSlug = $request->input("slug") ?? "";
+        if(strlen($serviceSlug) == 0){
+            $recetService = Service::where("start_at", ">",Carbon::now())->orderBy("start_at", "asc")->first();
+            $serviceSlug = $recetService->slug;
+        }
+       
+        $dataArray = array();
+        if(strlen($serviceSlug) > 0){
+            $list = ServiceRegistation::where("service_slug", $serviceSlug)->get();
+            $count = 1;
+            foreach ($list as $row)  {
+                $isNewcomer = $row->is_newcomer > 0 ? "Yes" : "";
+                $refereer = $row->recommend_by_name ?? "";
+                $dataArray[] = array(
+                    $count,
+                    $row->created_at->toDateTimeString(),
+                    $row->name,
+                    $isNewcomer,
+                    $refereer,
+                );
+                $count++;
+            }
+        }
+
+		//  Output now
+		$response["data"] = $dataArray;
+		return response()->json($response);
     
+    }
 
     //-----------------------------------------------------------
     public function scannerView(Request $request){

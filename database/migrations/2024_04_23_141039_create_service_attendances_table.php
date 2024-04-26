@@ -18,7 +18,7 @@ return new class extends Migration
             $table->char('name', length: 24);
             $table->char('register_id', length: 8)->nullable();
             $table->char('mobile', length: 24);
-            $table->char('serivce_slug', length: 24);
+            $table->char('service_slug', length: 24);
             
             $table->timestamps();
         });

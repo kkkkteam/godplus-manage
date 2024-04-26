@@ -98,9 +98,9 @@ class ServiceController extends Controller
 
             $service->title = $request->title;
             $service->speaker = $request->speaker;
-            $carbon_start= Carbon::parse($request->date." ".$request->time);
+            $carbon_start= Carbon::parse($request->start_date." ".$request->start_time);
             $service->start_at = $carbon_start;
-            $service->end_at = date("Y-m-d H:i:s", strtotime($carbon_start, "+2 hours"));
+            $service->end_at = date("Y-m-d H:i:s", strtotime("+2 hours", strtotime($carbon_start) ));
             $service->save();
 
             $response["status"] = 0;
@@ -149,44 +149,95 @@ class ServiceController extends Controller
             return response()->json($response);
         }
 
-        $member = ChurchMember::where("mobile", $mobile)->first();
-        if ($member) {
-            ServiceRegistation::create([
-                "name" => $member->lastname_zh.$member->surname_zh,
-                "mobile" => $member->mobile,
-                "serivce_slug" => $serviceSlug,
-            ]);
-            $nameOfApplicatant = $member->lastname_zh.$member->surname_zh;
-        } else {
-            $memberNew = ChurchMember::createMemberByService($name, $mobile);
-            ServiceRegistation::create([
-                "name" => $memberNew["member"]->nickname,
-                "mobile" => $memberNew["member"]->mobile,
-                "serivce_slug" => $serviceSlug,
-            ]);
-            $nameOfApplicatant = $memberNew["member"]->nickname;
+        $alreadyApplied =  ServiceRegistation::where("mobile", "852".$mobile)->where("service_slug", $serviceSlug)->first();
+
+        if (!$alreadyApplied){
+            $member = ChurchMember::where("mobile", "852".$mobile)->first();
+            if ($member) {
+                ServiceRegistation::create([
+                    "name" => $member->lastname_zh.$member->surname_zh,
+                    "mobile" => $member->mobile,
+                    "service_slug" => $serviceSlug,
+                ]);
+                $name = $member->lastname_zh.$member->surname_zh;
+            } else {
+                $memberNew = ChurchMember::createMemberByService($name, $mobile);
+                ServiceRegistation::create([
+                    "name" => $memberNew["member"]->nickname,
+                    "mobile" => $memberNew["member"]->mobile,
+                    "service_slug" => $serviceSlug,
+                ]);
+            }
         }
 
+        $friendConunt = 0;
         foreach( $friendDictionary as $friend){
-            if (str($friend["name"])==0) {continue;}
+            if (strlen($friend["name"])==0) {continue;}
             ServiceRegistation::create([
                 "name" => $friend["name"],
-                "recommend_by_name" => $nameOfApplicatant,
+                "recommend_by_name" => $name,
                 "recommend_by_mobile" => "852".$mobile,
                 "age_range" => $friend["age"],
                 "is_newcomer"=> $friend["is_newcomer"] ? 1 : 0,
-                "serivce_slug" => $serviceSlug,
+                "service_slug" => $serviceSlug,
             ]);
+            $friendConunt++;
         }
         $response["status"] = 0;
-        if (count($friendDictionary)>0){
-            $response["message"] = $nameOfApplicatant."和你".count($friendDictionary)."同行者, 到時見😃";
+        $response["url"] = route("member.service.success.html");
+        if ($friendConunt>0){
+            $response["message"] = $name."和你".$friendConunt."位家人/朋友, 到時見😃";
         }else{
-            $response["message"] = $nameOfApplicatant." 到時見😃";
+            $response["message"] = $name." 到時見😃";
         }
 
         return response()->json($response);
     }
+
+    //-----------------------------------------------------------
+    public function serviceRegisterSuccessView(Request $request){
+        $message = "查看我的報名記錄";
+        $sender = env("TWILIO_WHATSAPP_MOBILE","");
+        $url = "https://wa.me/".$sender."?text=".$message;
+        return view("success_service",[
+            "url" => $url,
+        ]);
+    }
+
+    //-----------------------------------------------------------
+    public static function checkMemberRegistration($mobile){
+
+        $reply = "沒有記錄";
+        if (strlen($mobile) == 0) { return  $reply;}
+
+        $validServiceList = Service::where("start_at", ">",Carbon::now())->get();
+        if (count($validServiceList) == 0) {return  $reply;}
+
+        $validServiceSlugArray = $validServiceList->select("slug")->toArray();
+        $registionServiceList = ServiceRegistation::where("mobile", $mobile)->whereIn("service_slug", $validServiceSlugArray)->get();
+        if (count($registionServiceList) == 0) { return  $reply;}
+
+        $count = 1;
+        $reply = "";
+        foreach($registionServiceList as $service){
+
+            $reply .= "\n";
+
+            $registionServiceTogether = ServiceRegistation::where("recommend_by_mobile", $mobile)->where("service_slug",$service->service_slug)->get();
+            $serviceDetail = Service::where("slug", $service->service_slug )->first();
+            $reply .= $count.". ".$serviceDetail->start_at." 《".$serviceDetail->title."》\n";
+            if (count($registionServiceTogether)>0){
+                $reply .= "\t\t同行: ";
+                foreach($registionServiceTogether as $people){
+                    $reply .= $people->name." ";
+                }
+            }
+            $count++;
+        }
+
+        return $reply;
+    }
+    
 
     //-----------------------------------------------------------
     public function scannerView(Request $request){

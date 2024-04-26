@@ -24,7 +24,7 @@ return new class extends Migration
             $table->char('age_range')->nullable();
             $table->boolean('is_newcomer')->default(false);
 
-            $table->char('serivce_slug', length: 24);
+            $table->char('service_slug', length: 24);
 
             $table->timestamps();
         });

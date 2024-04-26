@@ -15,6 +15,7 @@ Route::prefix('/member')
 
         Route::get('/service/join', [ServiceController::class, 'serviceRegisterView'])->name('service.register.html');
         Route::post('/service/register', [ServiceController::class, 'serviceRegisterAPI'])->name('service.register.api');
+        Route::get('/service/success', [ServiceController::class, 'serviceRegisterSuccessView'])->name('service.success.html');
         
 });
 

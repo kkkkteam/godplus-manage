@@ -141,7 +141,13 @@ class WhatsppController extends Controller
 			}else{
 				$messageOut = $resultMessage->reply;
 			}
+
 			$messageOut = str_replace('__MOBILE__',substr($mobile, 3, 8), $messageOut);
+
+			if (strstr($messageOut,'__SERVICE__' ) !== false) {
+				$serviceList = ServiceController::checkMemberRegistration($mobile);
+				$messageOut = str_replace('__SERVICE__', $serviceList , $messageOut);
+			}
 		} else {
 			$messageOut = "The message you give me: ".$message;
 		}

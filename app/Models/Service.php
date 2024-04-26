@@ -32,7 +32,7 @@ class Service extends Model
         $service->speaker = $informationArray["speaker"];
         $carbon_start= Carbon::parse($informationArray["start_date"]." ".$informationArray["start_time"]);
         $service->start_at = $carbon_start;
-        $service->end_at = date("Y-m-d H:i:s", strtotime($carbon_start, "+2 hours"));
+        $service->end_at = date("Y-m-d H:i:s", strtotime("+2 hours", strtotime($carbon_start) ));
         $service->save();
 
         return $service;

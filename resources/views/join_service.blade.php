@@ -102,7 +102,7 @@
             </div>
 
             <hr>
-            <h5>有朋友一齊嗎？</h5>
+            <h5>有家人/朋友一齊嗎？</h5>
             <fieldset id="friendsSection">
                 <div class="friend">
                     <div>
@@ -204,7 +204,7 @@
 					success: function (result)  {
                         if(result.status == 0){
                             alert(result.message);
-                            window.location.href = "https://godplus.org/" ;
+                            window.location.href = result.url;
                         }else{
                             // reload the current page
                             alert(result.error);

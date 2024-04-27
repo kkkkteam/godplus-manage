@@ -39,18 +39,18 @@
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
         <form id="commandForm">
-            <h3>GodPlus+ - Whatsapp List</h3>
+            <h3>GodPlus+ | Whatsapp List</h3>
             <div>
                 <label for="command">弟兄姊妹需輸入:</label>
                 <input type="text" id="command" name="command" required>
             </div>
             <div class="name-input">
                 <div>
-                    <label for="reply">回覆信息:</label>
+                    <label for="reply">回覆信息: ( 電話: __MOBILE__ ｜參加的崇拜: __SERVICE__)</label>
                     <textarea type="text" id="reply" name="reply" required></textarea>
                 </div>
                 <div>
-                    <label for="reply_with_name">回覆信息: (包括對方名字:__NAME__)</label>
+                    <label for="reply_with_name">回覆信息[會友]: ( 會友名字:__NAME__ | 電話: __MOBILE__ ｜參加的崇拜: __SERVICE__)</label>
                     <textarea type="text" id="reply_with_name" name="reply_with_name" required></textarea>
                 </div>
             </div>
@@ -66,7 +66,7 @@
 							<th>No.</th>
                             <th>弟兄姊妹輸入</th>
 							<th>信息回應</th>
-							<th>信息回應(有名字)</th>
+							<th>信息回應 [GodPlus+會友]</th>
                             <th>Action</th>
 						</tr></thead>
 						<tfoot><tr>

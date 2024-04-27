@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+
+use App\Models\ServiceRegistation;
 use Illuminate\Http\Request;
 use Twilio\Rest\Client;
 
@@ -50,12 +53,21 @@ class WhatsppController extends Controller
 			"content" 		=> json_encode($request->all(), JSON_UNESCAPED_UNICODE),
 		]);
 
-		$messageOut = $this->messageLogic(str_replace("whatsapp:+","",$sender),$bodyMessage );
-		$messageArray = [
-			"From" 	=> $receiver,
-			"To" 	=> $sender,
-			"Body" 	=> $messageOut,
-		];
+		$messageOutArray = $this->messageLogic(str_replace("whatsapp:+","",$sender),$bodyMessage );
+		if (isset($messageOutArray["mediaUrl"]) ) {
+			$messageArray = [
+				"From" 	=> $receiver,
+				"To" 	=> $sender,
+				"Body" 	=> $messageOutArray["text"],
+				"MediaUrl" 	=> $messageOutArray["mediaUrl"],
+			];
+		}else{
+			$messageArray = [
+				"From" 	=> $receiver,
+				"To" 	=> $sender,
+				"Body" 	=> $messageOutArray["text"],
+			];
+		}
 
 		$response = $this->sendingAction($messageArray);
 
@@ -129,30 +141,49 @@ class WhatsppController extends Controller
 
 	//-----------------------------------------------------------
 	public function messageLogic($mobile, $message)  {
+		// template : $message = 請給我入場CODE:Plf8jF9GSIfRgdrl
+		$serviceWord = "請給我入場CODE";
+		if (str_contains( $message ,$serviceWord) === true) {
+			$msgPieces = explode(":", $message);
+			$attendanceIDList = ServiceRegistation::where("service_slug", $msgPieces[1])
+								->where(function($list) use ($mobile)  {
+									$list->where("mobile", $mobile)->orWhere("recommend_by_mobile", $mobile);
+								})->pluck("id")->toArray();
 
-		$resultMessage = ChatCommand::where("command", $message)->inRandomOrder()->first();
-		
-		if ($resultMessage){
-			$member = ChurchMember::where("mobile", $mobile)->first();
-
-			if ($member){
-				$name = $member->nickname ?? $member->surname_zh;
-				$messageOut = str_replace('__NAME__', $name, $resultMessage->reply_with_name);
-			}else{
-				$messageOut = $resultMessage->reply;
-			}
-
-			$messageOut = str_replace('__MOBILE__',substr($mobile, 3, 8), $messageOut);
-
-			if (strstr($messageOut,'__SERVICE__' ) !== false) {
-				$serviceList = ServiceController::checkMemberRegistration($mobile);
-				$messageOut = str_replace('__SERVICE__', $serviceList , $messageOut);
-			}
+			$token = $mobile."_".implode("-", $attendanceIDList)."_".$msgPieces[1]; // Replace with your actual token data
+			$qrCode = QrCode::format('png')->size(200)->generate($token);
+			$filePath = storage_path('app/public/qrcodes/' . $token . '.png');
+			file_put_contents($filePath, $qrCode);
+			$arrayMessage = $arrayMessage['mediaUrl'] = [$filePath];
+			$messageOut = "Welcome 請向招待員出示🥰";
+	
 		} else {
-			$messageOut = "The message you give me: ".$message;
+			$resultMessage = ChatCommand::where("command", $message)->first();
+			if($resultMessage){
+				$member = ChurchMember::where("mobile", $mobile)->first();
+
+				// ___NAME___
+				if ($member){
+					$name = $member->nickname ?? $member->surname_zh;
+					$messageOut = str_replace('__NAME__', $name, $resultMessage->reply_with_name);
+				}else{
+					$messageOut = $resultMessage->reply;
+				}
+
+				// __MOBILE__
+				$messageOut = str_replace('__MOBILE__',substr($mobile, 3, 8), $messageOut);
+
+				// __SERVICE__
+				if (strstr($messageOut,'__SERVICE__' ) !== false) {
+					$serviceList = ServiceController::checkMemberRegistration($mobile);
+					$messageOut = str_replace('__SERVICE__', $serviceList , $messageOut);
+				}
+			}
 		}
 
-		return $messageOut;
+		$arrayMessage["text"] = $messageOut;
+dd($arrayMessage);
+		return $arrayMessage;
 
 	}
 

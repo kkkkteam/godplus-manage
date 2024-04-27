@@ -272,9 +272,10 @@ class ServiceController extends Controller
             foreach ($list as $row)  {
                 $isNewcomer = $row->is_newcomer > 0 ? "Yes" : "";
                 $refereer = $row->recommend_by_name ?? "";
+                $time = date("d/m h:ia", strtotime($row->created_at));
                 $dataArray[] = array(
                     $count,
-                    $row->created_at->toDateTimeString(),
+                    $time,
                     $row->name,
                     $isNewcomer,
                     $refereer,

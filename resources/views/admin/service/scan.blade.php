@@ -29,83 +29,39 @@
     <body>
         <img src="{{ url('/public/images/logo.png') }}" style="width:25px"><span>QR code scanner</span>
         <div style="width: 100vw;" id="reader"></div>
-        <div id="table-container">
-            <!-- Your related table content here -->
-            <div class='row'>
-                <div class=' col-sm-12'>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover" data-name="cool-table" id="dataTable">
-                            <thead><tr>
-                                <th>參加者</th>
-                                <th>出席</th>
-                            </tr></thead>
-                            <tfoot><tr>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr></tfoot>
-                        </table>
-
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div id="show-list"></div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js?v=4"></script>
         <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.dataTables.css" />
         <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
         <script type="text/javascript">
+                var _scaning = 0;
                 function onScanSuccess(decodedText, decodedResult) {
                     // Handle on success condition with the decoded text or result.
-                    document.getElementById("result").innerHTML = decodedText;
+                    $.ajax({
+                        type: "POST",
+                        data: {code:decodedText},
+                        dataType: "json",
+                        url: '{{ route("admin.service.scan.show.registration.api") }}',
+                        success: function (result)  {
+                            if (result.status == 0)  {
+                                _scaning = 1;
+                                document.getElementById("show-list").innerHTML = result.html+`<button type="button" class="btn btn-primary" onclick="submit()">Confirm</button>`;
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown)  {
+                            alert("Oops...\n#"+textStatus+": "+errorThrown);
+                        }
+                    });
                     event.preventDefault();
                 }
                 
                 var html5QrcodeScanner = new Html5QrcodeScanner(
                     "reader", { fps: 10, qrbox: 250 });
-                html5QrcodeScanner.render(onScanSuccess);
+                if (_scaning == 0 ){html5QrcodeScanner.render(onScanSuccess);}
 
-                $(document).ready(function()  {
-
-                    $("#dataTable tfoot th").each(function()  {
-                        var title = $(this).text();
-                        $(this).html('<input type="text" placeholder="'+title+'" style="width:100%;"/>');
-                    });
-
-                    _table = $("#dataTable").DataTable({
-                        info: true,
-                        paging: fale,
-                        ordering: true,
-                        autoWidth: true,
-                        searching: false,
-                        lengthChange: false,
-                        buttons: ["csv", "excel", "copy"],
-                        order: [[0, "desc"]],
-                        dom: "frtip",
-
-                        ajax: {
-                            url: '{{ route("admin.service.attendance.list.api")}}',
-                        },
-
-                        columnDefs: [
-                            {targets:0, width:"20px"},
-                            {targets:1, data:null, width:"40px", defaultContent:
-                                "<input type="checkbox" id=date name=data checked />"
-                            },
-                        ],
-
-                    });
-
-                    _table.columns().every(function()  {
-                        var that = this;
-                        $('input', this.footer()).on('keyup change clear', function()  {
-                            if (that.search() !== this.value)  {
-                                that
-                                .search( this.value )
-                                .draw();
-                            }
-                        });
-                    });
-                });
+                function submit(){
+                    _scaning = 0;
+                }
         </script>
     </body>
 </html>

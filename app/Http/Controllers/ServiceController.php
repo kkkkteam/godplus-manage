@@ -295,5 +295,38 @@ class ServiceController extends Controller
         return view("admin.service.scan");
     }
 
+    //-----------------------------------------------------------
+    public function showRegistrationListAPI(Request $request){
+        $code = $request->code ?? "" ;
+        $array = explode("_",$code);
+        $idArray = explode("-",$array[1]);
+
+        $list = ServiceRegistation::where("service_slug", $array[2])
+                                    ->whereIn("id", $idArray)
+                                    ->get();
+        $html = "";
+        foreach ($list as $row) {
+            $new = $row->is_newcomer == true ? "(新朋友)" : "" ;
+            switch ($row->age_range) {
+                case "bady":                $age = "[0-3歲]";   break;
+                case "kindergarten" :       $age = "[幼稚園]";   break;
+                case "primary" :            $age = "[小學]";    break;
+                case "junior-high-school" : $age = "[初中]";    break;
+                case "high-school" :        $age = "[高中]";    break;
+                case "college" :            $age = "[大專/大學]"; break;
+                case "adult" :              $age = "[在職]"; break;
+                case "elderly" :            $age = "[長者]"; break;
+                default :                   $age = ""; break;
+            }
+            $html .= '<div><input type="checkbox" id="'.$row->id.'" name="'.$row->id.'" value="1" checked /><label for="'.$row->id.'">'.$row->name.$age.$new.'</label></div>';
+        }
+        
+        $result=[];
+        $result["status"] = 0;
+        $result["html"] = $html;
+        return response()->json($result);
+
+    }
+
 
 }

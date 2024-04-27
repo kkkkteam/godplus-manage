@@ -23,6 +23,7 @@ return new class extends Migration
             $table->char('recommend_by_mobile', length: 24)->nullable();
             $table->char('age_range')->nullable();
             $table->boolean('is_newcomer')->default(false);
+            $table->boolean('attended')->default(false);
 
             $table->char('service_slug', length: 24);
 

@@ -146,6 +146,7 @@ class WhatsppController extends Controller
 		if (str_contains( $message ,$serviceWord) === true) {
 			$msgPieces = explode(":", $message);
 			$attendanceIDList = ServiceRegistation::where("service_slug", $msgPieces[1])
+								->where("attended", false)
 								->where(function($list) use ($mobile)  {
 									$list->where("mobile", $mobile)->orWhere("recommend_by_mobile", $mobile);
 								})->pluck("id")->toArray();
@@ -182,7 +183,7 @@ class WhatsppController extends Controller
 		}
 
 		$arrayMessage["text"] = $messageOut;
-dd($arrayMessage);
+
 		return $arrayMessage;
 
 	}

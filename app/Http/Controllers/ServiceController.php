@@ -178,7 +178,7 @@ class ServiceController extends Controller
                 "recommend_by_name" => $name,
                 "recommend_by_mobile" => "852".$mobile,
                 "age_range" => $friend["age"],
-                "is_newcomer"=> $friend["is_newcomer"] ? 1 : 0,
+                "is_newcomer"=> $friend["is_newcomer"] == "true" ? 1 : 0,
                 "service_slug" => $serviceSlug,
             ]);
             $friendConunt++;

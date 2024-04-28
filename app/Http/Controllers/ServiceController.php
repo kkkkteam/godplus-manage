@@ -382,17 +382,31 @@ class ServiceController extends Controller
                 foreach ($list as $row)  {
                     $isNewcomer = $row->is_newcomer > 0 ? "Yes" : "";
                     $refereer = $row->recommend_by_name ?? "";
-
+                    $age = "";
                     switch ($row->age_range) {
-                        case "bady":                $age = "[0-3歲]";   break;
-                        case "kindergarten":        $age = "[幼稚園]";   break;
-                        case "primary":             $age = "[小學]";    break;
-                        case "junior-high-school":  $age = "[初中]";    break;
-                        case "high-school":         $age = "[高中]";    break;
-                        case "college":             $age = "[大專/大學]"; break;
-                        case "adult":               $age = "[在職]"; break;
-                        case "elderly":             $age = "[長者]"; break;
+                        case "bady":                $age = "0-3歲";   break;
+                        case "kindergarten":        $age = "幼稚園";   break;
+                        case "primary":             $age = "小學";    break;
+                        case "junior-high-school":  $age = "初中";    break;
+                        case "high-school":         $age = "高中";    break;
+                        case "college":             $age = "大專/大學"; break;
+                        case "adult":               $age = "在職"; break;
+                        case "elderly":             $age = "長者"; break;
                         default:                    $age = ""; break;
+                    }
+
+                    if(strlen($age)==0){
+                        $member = ChurchMember::where("mobile", "852".$row->mobile)->first();
+                        if ($member && !is_null($member->birthday)){
+                            $memberAge = Carbon::parse($member->birthday)->age;
+                            if ($memberAge > 60 ){
+                                $age = "長者";
+                            }elseif($memberAge > 23 ) {
+                                $age = "在職";
+                            }else{
+                                $age = $memberAge." 歲";
+                            }
+                        }
                     }
 
                     $dataArray[] = array(

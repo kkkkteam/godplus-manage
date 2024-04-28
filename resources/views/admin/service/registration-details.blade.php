@@ -39,7 +39,7 @@
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
         <form id="commandForm">
-            <h3>GodPlus+ 崇拜報名登記</h3>
+            <h3>GodPlus+ 崇拜報名登記（招待專用）</h3>
             <div class="name-input">
                 <div>
                     <label for="service">檢視聚會場次</label>
@@ -107,7 +107,7 @@
                     pageLength: 30,
                     lengthChange: false,
                     buttons: ["csv", "excel", "copy"],
-                    order: [[0, "desc"]],
+                    order: [[0, "asc"]],
                     dom: "Bfrtip",
                     
                     ajax: {

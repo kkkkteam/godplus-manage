@@ -53,6 +53,8 @@ Route::prefix('/admin')
 
                 Route::get('/registration', [ServiceController::class, 'registrationListView'])->name('registration.html');
                 Route::get('/registration/list', [ServiceController::class, 'registrationListAPI'])->name('registration.list.api');
+                Route::get('/registration/list-details', [ServiceController::class, 'registrationListDetailsView'])->name('registration.list.details.html');
+                Route::get('/registration/list-details/data', [ServiceController::class, 'registrationListDetailsAPI'])->name('registration.list.details.api');
 
                 Route::get('/scan/qr-code', [ServiceController::class, 'scannerView'])->name('scan.html');
                 Route::post('/scan/show-list', [ServiceController::class, 'showRegistrationListAPI'])->name('scan.show.registration.api');

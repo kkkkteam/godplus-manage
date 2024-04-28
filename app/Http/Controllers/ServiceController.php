@@ -295,6 +295,25 @@ class ServiceController extends Controller
         return view("admin.service.scan");
     }
 
+
+    //-----------------------------------------------------------
+    public function showRegistrationListView(Request $request){
+
+        $serviceList = Service::where("start_at", ">",Carbon::now())->select("slug", "start_at","title")->get()->toArray();
+        $array = [];
+        foreach($serviceList as $service){
+            $array[]=[
+                "slug"     => $service["slug"],
+                "title"     => $service["title"],
+                "start_at"  => date("Y-m-d h:ia", strtotime($service["start_at"])),
+            ];
+        }
+
+        return view("admin.service.registration",[
+            "serviceList" => $array,
+        ]);
+    }
+
     //-----------------------------------------------------------
     public function showRegistrationListAPI(Request $request){
         $code = $request->code ?? "" ;
@@ -309,14 +328,14 @@ class ServiceController extends Controller
             $new = $row->is_newcomer == true ? "(新朋友)" : "" ;
             switch ($row->age_range) {
                 case "bady":                $age = "[0-3歲]";   break;
-                case "kindergarten" :       $age = "[幼稚園]";   break;
-                case "primary" :            $age = "[小學]";    break;
-                case "junior-high-school" : $age = "[初中]";    break;
-                case "high-school" :        $age = "[高中]";    break;
-                case "college" :            $age = "[大專/大學]"; break;
-                case "adult" :              $age = "[在職]"; break;
-                case "elderly" :            $age = "[長者]"; break;
-                default :                   $age = ""; break;
+                case "kindergarten":        $age = "[幼稚園]";   break;
+                case "primary":             $age = "[小學]";    break;
+                case "junior-high-school":  $age = "[初中]";    break;
+                case "high-school":         $age = "[高中]";    break;
+                case "college":             $age = "[大專/大學]"; break;
+                case "adult":               $age = "[在職]"; break;
+                case "elderly":             $age = "[長者]"; break;
+                default:                    $age = ""; break;
             }
             $html .= '<div><input type="checkbox" id="'.$row->id.'" name="'.$row->id.'" value="1" checked /><label for="'.$row->id.'">'.$row->name.$age.$new.'</label></div>';
         }
@@ -328,5 +347,69 @@ class ServiceController extends Controller
 
     }
 
+    //-----------------------------------------------------------
+    public function registrationListDetailsView(Request $request){
+
+        $serviceList = Service::where("start_at", ">",Carbon::now())->select("slug", "start_at","title")->get()->toArray();
+        $array = [];
+        foreach($serviceList as $service){
+            $array[]=[
+                "slug"     => $service["slug"],
+                "title"     => $service["title"],
+                "start_at"  => date("Y-m-d h:ia", strtotime($service["start_at"])),
+            ];
+        }
+
+        return view("admin.service.registration-details",[
+            "serviceList" => $array,
+        ]);
+
+    }
+
+        //-----------------------------------------------------------
+        public function registrationListDetailsAPI(Request $request){
+
+            $serviceSlug = $request->input("slug") ?? "";
+            if(strlen($serviceSlug) == 0){
+                $recetService = Service::where("start_at", ">",Carbon::now())->orderBy("start_at", "asc")->first();
+                $serviceSlug = $recetService->slug;
+            }
+        
+            $dataArray = array();
+            if(strlen($serviceSlug) > 0){
+                $list = ServiceRegistation::where("service_slug", $serviceSlug)->get();
+                $count = 1;
+                foreach ($list as $row)  {
+                    $isNewcomer = $row->is_newcomer > 0 ? "Yes" : "";
+                    $refereer = $row->recommend_by_name ?? "";
+
+                    switch ($row->age_range) {
+                        case "bady":                $age = "[0-3歲]";   break;
+                        case "kindergarten":        $age = "[幼稚園]";   break;
+                        case "primary":             $age = "[小學]";    break;
+                        case "junior-high-school":  $age = "[初中]";    break;
+                        case "high-school":         $age = "[高中]";    break;
+                        case "college":             $age = "[大專/大學]"; break;
+                        case "adult":               $age = "[在職]"; break;
+                        case "elderly":             $age = "[長者]"; break;
+                        default:                    $age = ""; break;
+                    }
+
+                    $dataArray[] = array(
+                        $count,
+                        $row->name,
+                        $age,
+                        $isNewcomer,
+                        $refereer,
+                    );
+                    $count++;
+                }
+            }
+
+            //  Output now
+            $response["data"] = $dataArray;
+            return response()->json($response);
+    
+        }
 
 }

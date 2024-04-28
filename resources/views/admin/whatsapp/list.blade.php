@@ -23,7 +23,7 @@
                 width:100%;
             }
 
-            form{
+            form, .container{
                 max-width: 100%;
             }
 
@@ -38,6 +38,7 @@
         </style>
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
+@include('admin.layout.menu')
         <form id="commandForm">
             <h3>GodPlus+ | Whatsapp List</h3>
             <div>

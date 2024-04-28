@@ -19,7 +19,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap" rel="stylesheet">
 
         <style>
-            form{
+            form, .container{
                 max-width: 800px;
             }
             .dt-search{
@@ -38,6 +38,7 @@
         </style>
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
+@include('admin.layout.menu')
         <form id="commandForm">
             <h3>GodPlus+ 崇拜報名登記</h3>
             <div class="name-input">

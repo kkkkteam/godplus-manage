@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\ChurchMember;
 use Illuminate\Http\Request;
+
 use App\Models\Service;
 use App\Models\ServiceRegistation;
+use App\Models\ServiceAttendance;
 
 use Carbon\Carbon;
 
@@ -290,11 +292,6 @@ class ServiceController extends Controller
     
     }
 
-    //-----------------------------------------------------------
-    public function scannerView(Request $request){
-        return view("admin.service.scan");
-    }
-
 
     //-----------------------------------------------------------
     public function showRegistrationListView(Request $request){
@@ -315,6 +312,11 @@ class ServiceController extends Controller
     }
 
     //-----------------------------------------------------------
+    public function scannerView(Request $request){
+        return view("admin.service.scan");
+    }
+
+    //-----------------------------------------------------------
     public function showRegistrationListAPI(Request $request){
         $code = $request->code ?? "" ;
         $array = explode("_",$code);
@@ -323,7 +325,7 @@ class ServiceController extends Controller
         $list = ServiceRegistation::where("service_slug", $array[2])
                                     ->whereIn("id", $idArray)
                                     ->get();
-        $html = "";
+        $html = '<form id="myForm">';
         foreach ($list as $row) {
             $new = $row->is_newcomer == true ? "(新朋友)" : "" ;
             switch ($row->age_range) {
@@ -337,12 +339,13 @@ class ServiceController extends Controller
                 case "elderly":             $age = "[長者]"; break;
                 default:                    $age = ""; break;
             }
-            $html .= '<div><input type="checkbox" id="'.$row->id.'" name="'.$row->id.'" value="1" checked /><label for="'.$row->id.'">'.$row->name.$age.$new.'</label></div>';
+            $html .= '<div><input type="checkbox" value="'.$row->id.'" name="myCheckbox" checked /><label for="'.$row->id.'">'.$row->name.$age.$new.'</label></div>';
         }
         
         $result=[];
         $result["status"] = 0;
-        $result["html"] = $html;
+        $result["slug"] = $array[2];
+        $result["html"] = $html.'</form>';
         return response()->json($result);
 
     }
@@ -366,64 +369,77 @@ class ServiceController extends Controller
 
     }
 
-        //-----------------------------------------------------------
-        public function registrationListDetailsAPI(Request $request){
+    //-----------------------------------------------------------
+    public function registrationListDetailsAPI(Request $request){
 
-            $serviceSlug = $request->input("slug") ?? "";
-            if(strlen($serviceSlug) == 0){
-                $recetService = Service::where("start_at", ">",Carbon::now())->orderBy("start_at", "asc")->first();
-                $serviceSlug = $recetService->slug;
-            }
-        
-            $dataArray = array();
-            if(strlen($serviceSlug) > 0){
-                $list = ServiceRegistation::where("service_slug", $serviceSlug)->get();
-                $count = 1;
-                foreach ($list as $row)  {
-                    $isNewcomer = $row->is_newcomer > 0 ? "Yes" : "";
-                    $refereer = $row->recommend_by_name ?? "";
-                    $age = "";
-                    switch ($row->age_range) {
-                        case "bady":                $age = "0-3歲";   break;
-                        case "kindergarten":        $age = "幼稚園";   break;
-                        case "primary":             $age = "小學";    break;
-                        case "junior-high-school":  $age = "初中";    break;
-                        case "high-school":         $age = "高中";    break;
-                        case "college":             $age = "大專/大學"; break;
-                        case "adult":               $age = "在職"; break;
-                        case "elderly":             $age = "長者"; break;
-                        default:                    $age = ""; break;
-                    }
+        $serviceSlug = $request->input("slug") ?? "";
+        if(strlen($serviceSlug) == 0){
+            $recetService = Service::where("start_at", ">",Carbon::now())->orderBy("start_at", "asc")->first();
+            $serviceSlug = $recetService->slug;
+        }
+    
+        $dataArray = array();
+        if(strlen($serviceSlug) > 0){
+            $list = ServiceRegistation::where("service_slug", $serviceSlug)->get();
+            $count = 1;
+            foreach ($list as $row)  {
+                $isNewcomer = $row->is_newcomer > 0 ? "Yes" : "";
+                $refereer = $row->recommend_by_name ?? "";
+                $age = "";
+                switch ($row->age_range) {
+                    case "bady":                $age = "0-3歲";   break;
+                    case "kindergarten":        $age = "幼稚園";   break;
+                    case "primary":             $age = "小學";    break;
+                    case "junior-high-school":  $age = "初中";    break;
+                    case "high-school":         $age = "高中";    break;
+                    case "college":             $age = "大專/大學"; break;
+                    case "adult":               $age = "在職"; break;
+                    case "elderly":             $age = "長者"; break;
+                    default:                    $age = ""; break;
+                }
 
-                    if(strlen($age)==0){
-                        $member = ChurchMember::where("mobile", "852".$row->mobile)->first();
-                        if ($member && !is_null($member->birthday)){
-                            $memberAge = Carbon::parse($member->birthday)->age;
-                            if ($memberAge > 60 ){
-                                $age = "長者";
-                            }elseif($memberAge > 23 ) {
-                                $age = "在職";
-                            }else{
-                                $age = $memberAge." 歲";
-                            }
+                if(strlen($age)==0){
+                    $member = ChurchMember::where("mobile", "852".$row->mobile)->first();
+                    if ($member && !is_null($member->birthday)){
+                        $memberAge = Carbon::parse($member->birthday)->age;
+                        if ($memberAge > 60 ){
+                            $age = "長者";
+                        }elseif($memberAge > 23 ) {
+                            $age = "在職";
+                        }else{
+                            $age = $memberAge." 歲";
                         }
                     }
-
-                    $dataArray[] = array(
-                        $count,
-                        $row->name,
-                        $age,
-                        $isNewcomer,
-                        $refereer,
-                    );
-                    $count++;
                 }
-            }
 
-            //  Output now
-            $response["data"] = $dataArray;
-            return response()->json($response);
-    
+                $dataArray[] = array(
+                    $count,
+                    $row->name,
+                    $age,
+                    $isNewcomer,
+                    $refereer,
+                );
+                $count++;
+            }
         }
+
+        //  Output now
+        $response["data"] = $dataArray;
+        return response()->json($response);
+
+    }
+
+    //-----------------------------------------------------------
+    public function makeAttendanceListAPI(Request $request){
+
+        $attendanceIDList = $request->input("arrayID");
+        $slug = $request->input("slug");
+        $messageOut = ServiceAttendance::makeAttendanceById($attendanceIDList, $slug);
+
+        $response["status"] = 0 ;
+        $response["message"] = $messageOut ;
+        return response()->json($response);
+        
+    }
 
 }

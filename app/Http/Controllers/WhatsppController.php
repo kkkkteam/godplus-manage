@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\Png;
+use BaconQrCode\Writer;
 
 use App\Models\ServiceRegistation;
 use Illuminate\Http\Request;
 use Twilio\Rest\Client;
 
+use App\Models\ServiceAttendance;
 use App\Models\WhatsappWebhook;
 use App\Models\WhatsappSendOut;
 use App\Models\StatusMessage;
@@ -141,8 +145,12 @@ class WhatsppController extends Controller
 
 	//-----------------------------------------------------------
 	public function messageLogic($mobile, $message)  {
-		// template : $message = 請給我入場CODE:Plf8jF9GSIfRgdrl
+
+		// template 1 : $message = 請給我入場CODE:Plf8jF9GSIfRgdrl
+		// template 2 : $message = 我到崇拜現場:Plf8jF9GSIfRgdrl
+
 		$serviceWord = "請給我入場CODE";
+		$serviceWordText = "我到崇拜現場";
 		if (str_contains( $message ,$serviceWord) === true) {
 			$msgPieces = explode(":", $message);
 			$attendanceIDList = ServiceRegistation::where("service_slug", $msgPieces[1])
@@ -151,13 +159,25 @@ class WhatsppController extends Controller
 								})->pluck("id")->toArray();
 
 			$token = $mobile."_".implode("-", $attendanceIDList)."_".$msgPieces[1]; // Replace with your actual token data
-			$qrCode = QrCode::format('png')->size(200)->generate($token);
-			$filePath = storage_path('app/public/qrcodes/' . $token . '.png');
-			file_put_contents($filePath, $qrCode);
-			$arrayMessage = $arrayMessage['mediaUrl'] = [$filePath];
+			$qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(200)->generate($token);
+			// $filePath = storage_path('app/public/qrcodes/' . $token . '.png');
+			// file_put_contents($filePath, $qrCode);
+			// $arrayMessage['mediaUrl'] = [$filePath];
+			$imageData = base64_encode($qrCode);
+			$arrayMessage['mediaUrl'] = ["data:image/png;base64,$imageData"];
 			$messageOut = "Welcome 請向招待員出示🥰";
 	
+		} elseif (str_contains( $message ,$serviceWordText) === true) {
+
+			$msgPieces = explode(":", $message);
+			$attendanceIDList = ServiceRegistation::where("service_slug", $msgPieces[1])
+								->where(function($list) use ($mobile)  {
+									$list->where("mobile", $mobile)->orWhere("recommend_by_mobile", $mobile);
+								})->pluck("id")->toArray();
+			$messageOut = ServiceAttendance::makeAttendanceById($attendanceIDList, $msgPieces[1]);
+
 		} else {
+			
 			$resultMessage = ChatCommand::where("command", $message)->first();
 			if($resultMessage){
 				$member = ChurchMember::where("mobile", $mobile)->first();

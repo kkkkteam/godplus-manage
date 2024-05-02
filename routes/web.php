@@ -58,6 +58,7 @@ Route::prefix('/admin')
 
                 Route::get('/scan/qr-code', [ServiceController::class, 'scannerView'])->name('scan.html');
                 Route::post('/scan/show-list', [ServiceController::class, 'showRegistrationListAPI'])->name('scan.show.registration.api');
+                Route::post('/scan/attend-list', [ServiceController::class, 'makeAttendanceListAPI'])->name('scan.make.attendance.api');
 
         });
 

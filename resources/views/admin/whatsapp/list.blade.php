@@ -23,7 +23,7 @@
                 width:100%;
             }
 
-            form, .container{
+            form{
                 max-width: 100%;
             }
 

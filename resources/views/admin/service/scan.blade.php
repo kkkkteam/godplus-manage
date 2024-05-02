@@ -30,6 +30,7 @@
         <img src="{{ url('/public/images/logo.png') }}" style="width:25px"><span>QR code scanner</span>
         <div style="width: 100vw;" id="reader"></div>
         <div id="show-list"></div>
+        <input type="hidden" id="slug" name="slug" value="">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js?v=4"></script>
         <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.dataTables.css" />
         <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
@@ -45,6 +46,7 @@
                         success: function (result)  {
                             if (result.status == 0)  {
                                 _scaning = 1;
+                                document.getElementById("slug").value = result.slug;
                                 document.getElementById("show-list").innerHTML = result.html+`<button type="button" class="btn btn-primary" onclick="submit()">Confirm</button>`;
                             }
                         },
@@ -60,6 +62,29 @@
                 if (_scaning == 0 ){html5QrcodeScanner.render(onScanSuccess);}
 
                 function submit(){
+
+                    var checkboxes = document.querySelectorAll('input[name="myCheckbox"]:checked');
+                    var data = Array.from(checkboxes).map((checkbox) => {
+                        return {
+                            id: checkbox.value,
+                        };
+                    });
+                    var slugService = document.getElementById("slug").value;
+
+                    $.ajax({
+                        type: "POST",
+                        data: {arrayID:data, slug:slugService},
+                        dataType: "json",
+                        url: '{{ route("admin.service.scan.make.attendance.api") }}',
+                        success: function (result)  {
+                            if (result.status == 0)  {
+                                alert(result.message);
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown)  {
+                            alert("Oops...\n#"+textStatus+": "+errorThrown);
+                        }
+                    });
                     _scaning = 0;
                 }
         </script>

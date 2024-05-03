@@ -26,6 +26,17 @@
             .dt-search{
                 padding-bottom:5px;
             }
+            select{
+                width: 300px;
+            }
+            @media screen and (max-width: 600px) {
+                .dt-search{
+                    display:none;
+                }
+                select{
+                    width: 250px;
+                }
+            }
             table{
                 font-size: .8rem;
                 font-weight: 400;
@@ -48,7 +59,7 @@
             <div class="name-input">
                 <div>
                     <label for="service">檢視聚會場次</label>
-                    <select class="service" id="service" name="service" style="width:300px;" required>
+                    <select class="service" id="service" name="service" required>
 @if (isset($serviceList) and !empty($serviceList))
 @foreach ($serviceList as $service)
                         <option value="{{$service["slug"]}}">{{$service["start_at"] ?? ""}} 《{{$service["title"] ?? ""}}》</option>
@@ -61,7 +72,7 @@
             <hr>
             
             <div class='row'>
-                <p>到場人數：<span id="people"></span></p>
+            <p>已到場人數：<span id="people" style="font-weight:600;color:red;"></span></p>
                 <div class='col-sm-12'>
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover" data-name="cool-table" id="dataTable2">
@@ -129,7 +140,6 @@
                         {targets:0, width:"10px"},
                         {targets:1, width:"150px"},
                         {targets:2, width:"200px"},
-                        {name: 'arrive_time', targets:5},
                         {targets:6, visible:false},
                     ],
 
@@ -138,6 +148,7 @@
                             $(row).addClass('already_marked');
                             attendedCount++;
                         }
+                        document.getElementById("people").innerHTML = attendedCount;
                     },
 
                 });
@@ -150,7 +161,6 @@
                         }
                     });
                 });
-                document.getElementById('people').value = attendedCount;
             });
 
             function selectServiceView(){

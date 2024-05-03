@@ -418,13 +418,15 @@ class ServiceController extends Controller
                         }
                     }
                 }
-
+                $time = $row->attended == true  ? Carbon::parse($row->updated_at)->toTimeString() : "";
                 $dataArray[] = array(
                     $count,
                     $row->name,
                     $age,
                     $isNewcomer,
                     $refereer,
+                    $time,
+                    $row->attended,
                 );
                 $count++;
             }

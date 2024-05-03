@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta http-equiv="refresh" content="15">
 
         <title>Registration List</title>
 
@@ -35,10 +36,13 @@
             table.dataTable > tbody > tr > th, table.dataTable > tbody > tr > td{
                 padding: 1px 4px;
             }
+            .already_marked{
+                color :red;
+                font-weight:600;
+            }
         </style>
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
-@include('admin.layout.menu')
         <form id="commandForm">
             <h3>GodPlus+ 崇拜報名登記（招待專用）</h3>
             <div class="name-input">
@@ -57,6 +61,7 @@
             <hr>
             
             <div class='row'>
+                <p>到場人數：<span id="people"></span></p>
                 <div class='col-sm-12'>
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover" data-name="cool-table" id="dataTable2">
@@ -66,8 +71,10 @@
                                 <th>背景</th>
                                 <th>是新朋友？</th>
                                 <th>同行者</th>
+                                <th>到達時間</th>
                             </tr></thead>
                             <tfoot><tr>
+                                <th>Search</th>
                                 <th>Search</th>
                                 <th>Search</th>
                                 <th>Search</th>
@@ -91,21 +98,21 @@
         <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
         
         <script type="text/javascript">
-
+            var attendedCount = 0;
             $(document).ready(function()  {
                 
                 $("#dataTable2 tfoot th").each(function()  {
                     var title = $(this).text();
                     $(this).html('<input type="text" placeholder="'+title+'" style="width:100%;"/>');
                 });
-
+                attendedCount = 0;
                 _table = $("#dataTable2").DataTable({
                     info: true,
                     paging: true,
                     ordering: true,
                     autoWidth: true,
                     searching: true,
-                    pageLength: 30,
+                    pageLength: 80,
                     lengthChange: false,
                     buttons: ["csv", "excel", "copy"],
                     order: [[0, "asc"]],
@@ -121,8 +128,17 @@
                     columnDefs: [
                         {targets:0, width:"10px"},
                         {targets:1, width:"150px"},
-                        {targets:2, width:"300px"},
+                        {targets:2, width:"200px"},
+                        {name: 'arrive_time', targets:5},
+                        {targets:6, visible:false},
                     ],
+
+                    createdRow: function (row, data, dataIndex) {
+                        if (data[6] == true) {
+                            $(row).addClass('already_marked');
+                            attendedCount++;
+                        }
+                    },
 
                 });
 
@@ -134,6 +150,7 @@
                         }
                     });
                 });
+                document.getElementById('people').value = attendedCount;
             });
 
             function selectServiceView(){
@@ -142,7 +159,6 @@
                 window.history.pushState(null, null, url);
                 _table.ajax.reload(null, false);
             }
-
         </script>
     </body>
 </html>

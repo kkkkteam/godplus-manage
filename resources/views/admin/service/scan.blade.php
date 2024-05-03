@@ -27,7 +27,7 @@
         </style>
     </head>
     <body>
-        <img src="{{ url('/public/images/logo.png') }}" style="width:25px"><span>QR code scanner</span>
+        <img src="{{ url('/images/logo.png') }}" style="width:25px"><span>QR code scanner</span>
         <div style="width: 100vw;" id="reader"></div>
         <div id="show-list"></div>
         <input type="hidden" id="slug" name="slug" value="">
@@ -38,23 +38,25 @@
                 var _scaning = 0;
                 function onScanSuccess(decodedText, decodedResult) {
                     // Handle on success condition with the decoded text or result.
-                    $.ajax({
-                        type: "POST",
-                        data: {code:decodedText},
-                        dataType: "json",
-                        url: '{{ route("admin.service.scan.show.registration.api") }}',
-                        success: function (result)  {
-                            if (result.status == 0)  {
-                                _scaning = 1;
-                                document.getElementById("slug").value = result.slug;
-                                document.getElementById("show-list").innerHTML = result.html+`<button type="button" class="btn btn-primary" onclick="submit()">Confirm</button>`;
-                            }
+                    fetch('/admin/service/scan/attend-list', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
                         },
-                        error: function (XMLHttpRequest, textStatus, errorThrown)  {
-                            alert("Oops...\n#"+textStatus+": "+errorThrown);
+                        body: JSON.stringify({ decodedText })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status == 0)  {
+                            document.getElementById("slug").value = data.slug;
+                            document.getElementById("show-list").innerHTML = data.html+`<button type="button" class="btn btn-primary" onclick="submit()">Confirm</button>`;
+                            _scaning = 1;
                         }
+                    })
+                    .catch(error => {
+                        // Handle any errors
+                        console.error('Error:', error);
                     });
-                    event.preventDefault();
                 }
                 
                 var html5QrcodeScanner = new Html5QrcodeScanner(

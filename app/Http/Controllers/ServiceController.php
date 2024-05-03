@@ -318,13 +318,20 @@ class ServiceController extends Controller
 
     //-----------------------------------------------------------
     public function showRegistrationListAPI(Request $request){
-        $code = $request->code ?? "" ;
+
+        $code = $request->body ? json_decode($request->code, true) : "" ;
         $array = explode("_",$code);
         $idArray = explode("-",$array[1]);
 
         $list = ServiceRegistation::where("service_slug", $array[2])
                                     ->whereIn("id", $idArray)
                                     ->get();
+        if(empty($list)){
+            $result["status"] = -1;
+            $result["message"] = "沒有記錄";
+            return response()->json($result);
+        }
+
         $html = '<form id="myForm">';
         foreach ($list as $row) {
             $new = $row->is_newcomer == true ? "(新朋友)" : "" ;

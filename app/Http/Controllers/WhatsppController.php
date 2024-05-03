@@ -3,9 +3,6 @@
 namespace App\Http\Controllers;
 
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use BaconQrCode\Renderer\ImageRenderer;
-use BaconQrCode\Renderer\Image\Png;
-use BaconQrCode\Writer;
 
 use App\Models\ServiceRegistation;
 use Illuminate\Http\Request;
@@ -159,13 +156,10 @@ class WhatsppController extends Controller
 								})->pluck("id")->toArray();
 
 			$token = $mobile."_".implode("-", $attendanceIDList)."_".$msgPieces[1]; // Replace with your actual token data
-			$qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(200)->generate($token);
-			// $filePath = storage_path('app/public/qrcodes/' . $token . '.png');
-			// file_put_contents($filePath, $qrCode);
-			// $arrayMessage['mediaUrl'] = [$filePath];
-			$imageData = base64_encode($qrCode);
-			$arrayMessage['mediaUrl'] = ["data:image/png;base64,$imageData"];
-			$messageOut = "Welcome 請向招待員出示🥰";
+			$qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(250)->margin(2)->generate($token);
+			$filePath = storage_path('app/public/' . $token . '.png');
+			file_put_contents($filePath, $qrCode);
+			$arrayMessage['mediaUrl'] = [asset('public/storage/'. $token . '.png')];
 	
 		} elseif (str_contains( $message ,$serviceWordText) === true) {
 

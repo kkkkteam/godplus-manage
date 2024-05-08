@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <meta http-equiv="refresh" content="15">
+        <!-- <meta http-equiv="refresh" content="15"> -->
 
         <title>Registration List</title>
 
@@ -13,7 +13,7 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <link rel="stylesheet" href="/css/style.css">
-        <link rel="stylesheet" href="{{ url('/public/css/style.css')}}">
+        <!-- <link rel="stylesheet" href="{{ url('/public/css/style.css')}}"> -->
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -140,7 +140,15 @@
                         {targets:0, width:"10px"},
                         {targets:1, width:"150px"},
                         {targets:2, width:"200px"},
-                        {targets:6, visible:false},
+                        {targets:5,
+                            render: function (data, type, row, meta) {
+                                if (data == ""){
+                                    return `<button class="btn btn-sm btn-warning attendButton" >報到</button>`; 
+                                }else{
+                                    return data; 
+                                }
+                            },
+                        }
                     ],
 
                     createdRow: function (row, data, dataIndex) {
@@ -161,6 +169,38 @@
                         }
                     });
                 });
+
+                $("#dataTable2 tbody").on("click", "button.attendButton", function()  {
+              
+                    var data = _table.row($(this).parents("tr")).data();
+                    var id = data[7];
+                    var slug = $("#service").val();
+                    var parameters = {
+                        id:id,
+                        slug:slug,
+                    };
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        data: parameters,
+                        url: "{{ route('admin.service.registration.individual.attend.api')}}",
+                        success: function (result)  {
+                            if (result.status == 0)  {
+                                _table.ajax.reload(null, false);
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown)  {
+                            alert("Oops...\n#"+textStatus+": "+errorThrown);
+                        }
+                    });
+                    return false;
+                });
             });
 
             function selectServiceView(){
@@ -169,6 +209,8 @@
                 window.history.pushState(null, null, url);
                 _table.ajax.reload(null, false);
             }
+
+
         </script>
     </body>
 </html>

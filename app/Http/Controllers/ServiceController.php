@@ -118,7 +118,7 @@ class ServiceController extends Controller
 
         $mobile = $request->input("m") ?? "";
 
-        $serviceList = Service::where("start_at", ">",Carbon::now())->select("slug", "start_at","title")->get()->toArray();
+        $serviceList = Service::where("end_at", ">",Carbon::now())->select("slug", "start_at","title")->get()->toArray();
         $array = [];
         foreach($serviceList as $service){
             $array[]=[
@@ -156,12 +156,14 @@ class ServiceController extends Controller
         if (!$alreadyApplied){
             $member = ChurchMember::where("mobile", "852".$mobile)->first();
             if ($member) {
+                if(!is_null($member->surname_zh) && strlen($member->surname_zh)>0){
+                    $name = $member->lastname_zh.$member->surname_zh;
+                }
                 ServiceRegistation::create([
-                    "name" => $member->lastname_zh.$member->surname_zh,
+                    "name" => $name,
                     "mobile" => $member->mobile,
                     "service_slug" => $serviceSlug,
                 ]);
-                $name = $member->lastname_zh.$member->surname_zh;
             } else {
                 $memberNew = ChurchMember::createMemberByService($name, $mobile);
                 ServiceRegistation::create([
@@ -212,7 +214,7 @@ class ServiceController extends Controller
         $reply = "沒有記錄";
         if (strlen($mobile) == 0) { return  $reply;}
 
-        $validServiceList = Service::where("start_at", ">",Carbon::now())->get();
+        $validServiceList = Service::where("end_at", ">",Carbon::now())->get();
         if (count($validServiceList) == 0) {return  $reply;}
 
         $validServiceSlugArray = $validServiceList->select("slug")->toArray();
@@ -360,7 +362,7 @@ class ServiceController extends Controller
     //-----------------------------------------------------------
     public function registrationListDetailsView(Request $request){
 
-        $serviceList = Service::where("start_at", ">",Carbon::now())->select("slug", "start_at","title")->get()->toArray();
+        $serviceList = Service::where("end_at", ">",Carbon::now())->select("slug", "start_at","title")->get()->toArray();
         $array = [];
         foreach($serviceList as $service){
             $array[]=[
@@ -381,7 +383,7 @@ class ServiceController extends Controller
 
         $serviceSlug = $request->input("slug") ?? "";
         if(strlen($serviceSlug) == 0){
-            $recetService = Service::where("start_at", ">",Carbon::now())->orderBy("start_at", "asc")->first();
+            $recetService = Service::where("end_at", ">",Carbon::now())->orderBy("start_at", "asc")->first();
             $serviceSlug = $recetService->slug;
         }
     
@@ -420,13 +422,14 @@ class ServiceController extends Controller
                 }
                 $time = $row->attended == true  ? Carbon::parse($row->updated_at)->toTimeString() : "";
                 $dataArray[] = array(
-                    $count,
-                    $row->name,
-                    $age,
-                    $isNewcomer,
-                    $refereer,
-                    $time,
-                    $row->attended,
+                    $count,         //0
+                    $row->name,     //1
+                    $age,           //2
+                    $isNewcomer,    //3
+                    $refereer,      //4
+                    $time,          //5
+                    $row->attended, //6
+                    $row->id,       //7
                 );
                 $count++;
             }
@@ -451,4 +454,16 @@ class ServiceController extends Controller
         
     }
 
+    // ---------------------------------------------------
+    public function registrationIndividualAttendAPI(Request $request){
+
+        $id = $request->input("id");
+        $slug = $request->input("slug");
+
+        $messageOut = ServiceAttendance::makeAttendanceById([$id], $slug);
+
+        $response["status"] = 0 ;
+        return response()->json($response);
+        
+    }
 }

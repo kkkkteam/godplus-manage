@@ -23,18 +23,6 @@
             <h2>加入 God Plus<img src="{{ url('images/logo.png') }}"></h2>
             <div class="name-input">
                 <div>
-                    <label for="surname_en">Surname (English):</label>
-                    <input type="text" id="surname_en" name="surname_en">
-                    <span id="surname_en_error" class="error"></span>
-                </div>
-                <div>
-                    <label for="lastname_en">Lastname (English):</label>
-                    <input type="text" id="lastname_en" name="lastname_en">
-                    <span id="lastname_en_error" class="error"></span>
-                </div>
-            </div>
-            <div class="name-input">
-                <div>
                     <label for="surname_zh">名 (中文):*</label>
                     <input type="text" id="surname_zh" name="surname_zh" required>
                     <span id="surname_zh_error" class="error"></span>
@@ -45,7 +33,18 @@
                     <span id="lastname_zh_error" class="error"></span>
                 </div>
             </div>
-
+            <div class="name-input">
+                <div>
+                    <label for="surname_en">Given Name (English):</label>
+                    <input type="text" id="surname_en" name="surname_en">
+                    <span id="surname_en_error" class="error"></span>
+                </div>
+                <div>
+                    <label for="lastname_en">Family Name (English):</label>
+                    <input type="text" id="lastname_en" name="lastname_en">
+                    <span id="lastname_en_error" class="error"></span>
+                </div>
+            </div>
             <div style="width:49%;">
                 <label for="nickname">平時點叫你😄</label>
                 <input type="text" id="nickname" name="nickname" >
@@ -77,11 +76,11 @@
                     </select>
                 </div>
             </div>
-            <div>
+            <!-- <div>
                 <label for="photo">Your Photo:</label>
                 <input type="file" id="photo" name="photo" accept="image/*" capture>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button><br>
+            </div> -->
+            <button type="button" class="btn btn-primary" onclick="submitForm()" style="margin-top:5%;">Submit</button><br>
             <small>*為必需填寫。</small>
         </form>
         

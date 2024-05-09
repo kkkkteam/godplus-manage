@@ -135,7 +135,7 @@
                     columnDefs: [ 
                         {targets:0, width:"10px"},
                         {targets:1, width:"150px"},
-                        {targets:2, width:"300px"},
+                        {targets:2, width:"50px"},
                     ],
 
                 });

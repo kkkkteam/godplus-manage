@@ -497,8 +497,6 @@ class ServiceController extends Controller
         foreach ($attendanceList as $row)  {
 
             $updateWithinToday = 0;
-            $nowComer = "";
-            $inviter = "";
 
             if (date("Y-m-d", strtotime($row->created_at)) == Carbon::today()) {
                 $updateWithinToday = 1;
@@ -506,18 +504,16 @@ class ServiceController extends Controller
 
             $record = ServiceRegistation::where("id", $row->register_id)->first();
 
-            if(!is_null($record->recommend_by_name)){
-                $nowComer = "Yes";
-                $inviter = $record->recommend_by_name;
-            }
+            $isNewcomer = $record->is_newcomer > 0 ? "Yes" : "No";
+            $refereer = $record->recommend_by_name ?? "";
 
             $attendTime = date("Y-m-d h:ia", strtotime($row->updated_at));
 
             $dataArray[] = array(
                 $count,
                 $row->name,
-                $nowComer,
-                $inviter,
+                $isNewcomer,
+                $refereer,
                 $attendTime,
                 $updateWithinToday,
             );

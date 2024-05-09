@@ -90,7 +90,7 @@ class ServiceAttendance extends Model
 
             $attednRecord = ServiceAttendance::create([
                 "name"         => $name,
-                "mobile"       => $mobile,
+                "mobile"       => $mobile ?? "",
                 "service_slug" => $serviceSlug,
                 "updated_at"  => $attendenceTime,
                 "register_id"  => $registRecord->id,

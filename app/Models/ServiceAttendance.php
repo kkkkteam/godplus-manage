@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\ServiceRegistation;
+use App\Models\Service;
 class ServiceAttendance extends Model
 {
     use HasFactory;
@@ -53,9 +54,9 @@ class ServiceAttendance extends Model
         if($attendenceTime > 3){        // Normal 
             $message = $applicantName." 很高興你回到God Plus神家當中，願你多多領受神的感動。💞\n";
         }elseif($attendenceTime > 1){   // 2nd-3rd time
-            $message = $applicantName." Happy to see you again~\n回到God Plus神家當中，願你今天也得著滿滿的感動。🫶\n";
+            $message = "啦啦啦～～🎶 \n咦？😮係你啊？😝\n好開心今日又見到你❤️\nWelcome Home!!!";
         }else{                          // 1st time
-            $message = $applicantName." 歡迎你第一次來到God Plus神家當中，希望你在這裡與神相遇，和經歷神家裡既愛。🥰🫰\n";
+            $message = $applicantName." Welcome Home！\n初次見面！好高興認識你😆\nChill~Relax~Warm~\n呢到就係你既屋企😉\n";
         }
 
         if($count > 1){
@@ -66,5 +67,36 @@ class ServiceAttendance extends Model
 
         return $message;
     }
+
+        //-------------------------------------------------
+        public static function addAttendance($name, $mobile, $serviceSlug, $attendenceTime){
+
+            if (strlen($name) == 0 || strlen($attendenceTime) == 0 ){
+                return false;
+            }
+
+            $service = Service::where("slug", $serviceSlug)->first();
+
+            if ($service == null){
+                return false;
+            }
+
+            $registRecord = ServiceRegistation::create([
+                "name"          => $name,
+                "mobile"        => $mobile,
+                "service_slug"  => $serviceSlug,
+                "attended"      => true,                
+            ]);
+
+            $attednRecord = ServiceAttendance::create([
+                "name"         => $name,
+                "mobile"       => $mobile,
+                "service_slug" => $serviceSlug,
+                "updated_at"  => $attendenceTime,
+                "register_id"  => $registRecord->id,
+            ]);
+
+            return $attednRecord;
+        }
 
 }

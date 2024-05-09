@@ -51,18 +51,23 @@ Route::prefix('/admin')
                 Route::get('/update', [ServiceController::class, 'updateServiceView'])->name('update.html');
                 Route::post('/update', [ServiceController::class, 'updateServiceAPI'])->name('update.api');
 
+                // registration
                 Route::get('/registration', [ServiceController::class, 'registrationListView'])->name('registration.html');
                 Route::get('/registration/list', [ServiceController::class, 'registrationListAPI'])->name('registration.list.api');
                 Route::get('/registration/list-details', [ServiceController::class, 'registrationListDetailsView'])->name('registration.list.details.html');
                 Route::get('/registration/list-details/data', [ServiceController::class, 'registrationListDetailsAPI'])->name('registration.list.details.api');
                 Route::post('/registration/individual/attend', [ServiceController::class, 'registrationIndividualAttendAPI'])->name('registration.individual.attend.api');
+                
+                // attendance update page
+                Route::get('/attendance/update', [ServiceController::class, 'attendanceUpdateView'])->name('attendance.update.html');
+                Route::get('/attendance/list', [ServiceController::class, 'attendancelistAPI'])->name('attendance.list.api');
+                Route::post('/attendance/add', [ServiceController::class, 'attendanceAddAPI'])->name('attendance.add.api');
+                Route::post('/attendance/detele', [ServiceController::class, 'attendanceDeteleAPI'])->name('attendance.detele.api');
 
                 Route::get('/scan/qr-code', [ServiceController::class, 'scannerView'])->name('scan.html');
                 Route::post('/scan/show-list', [ServiceController::class, 'showRegistrationListAPI'])->name('scan.show.registration.api');
                 Route::post('/scan/attend-list', [ServiceController::class, 'makeAttendanceListAPI'])->name('scan.make.attendance.api');
 
-
-                
 
         });
 

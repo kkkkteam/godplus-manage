@@ -466,4 +466,92 @@ class ServiceController extends Controller
         return response()->json($response);
         
     }
+
+    // ---------------------------------------------------
+    public function attendanceUpdateView(Request $request){
+
+        $serviceList = Service::where("end_at", "<",Carbon::now())->select("slug", "start_at","title")->orderBy("start_at","desc")->get()->toArray();
+        $array = [];
+        foreach($serviceList as $service){
+            $array[]=[
+                "slug"     => $service["slug"],
+                "title"     => $service["title"],
+                "start_at"  => date("Y-m-d h:ia", strtotime($service["start_at"])),
+            ];
+        }
+
+        return view("admin.service.attendance.update",[
+            "serviceList" => $array,
+        ]);
+    }
+
+    // ---------------------------------------------------
+    public function attendancelistAPI(Request $request){
+
+        $slug = $request->input("slug");
+
+        $attendanceList = ServiceAttendance::where("service_slug", $slug)->get();
+        $dataArray = array();
+
+        $count = 1;
+        foreach ($attendanceList as $row)  {
+
+            $updateWithinToday = 0;
+            $nowComer = "";
+            $inviter = "";
+
+            if (date("Y-m-d", strtotime($row->created_at)) == Carbon::today()) {
+                $updateWithinToday = 1;
+            }
+
+            $record = ServiceRegistation::where("id", $row->register_id)->first();
+
+            if(!is_null($record->recommend_by_name)){
+                $nowComer = "Yes";
+                $inviter = $record->recommend_by_name;
+            }
+
+            $attendTime = date("Y-m-d h:ia", strtotime($row->updated_at));
+
+            $dataArray[] = array(
+                $count,
+                $row->name,
+                $nowComer,
+                $inviter,
+                $attendTime,
+                $updateWithinToday,
+            );
+
+            $count++;
+        }
+
+        //  Output now
+        $response["data"] = $dataArray;
+        return response()->json($response);
+        
+    }
+
+    // ---------------------------------------------------
+    public function attendanceAddAPI(Request $request){
+
+        $response = array(
+            "status"=> -1,
+        );
+
+        $slug = $request->input("slug");
+        $name = $request->input("name");
+        $mobile = $request->input("mobile");
+        $time = $request->input("time");
+
+        $service = Service::where("slug", $slug)->first();
+        $attendDateTime = date("Y-m-d", strtotime($service->start_at))." ".$time.":00";
+
+        $record = ServiceAttendance::addAttendance($name, $mobile, $slug, $attendDateTime);
+
+        $response["data"] = $record->toArray();
+        $response["status"] = 0 ;
+        return response()->json($response);
+
+    }
+
 }

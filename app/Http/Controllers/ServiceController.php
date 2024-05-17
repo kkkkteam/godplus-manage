@@ -550,4 +550,113 @@ class ServiceController extends Controller
 
     }
 
+    // ---------------------------------------------------
+    public function downloadServiceQRCodeAPI(Request $request){
+
+        $slug = $request->input("slug");
+
+        $token = "https://wa.me/".env("TWILIO_WHATSAPP_MOBILE")."?text=我到崇拜現場:".$slug;
+        $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('png')->size(300)->margin(2)->generate($token);
+        $filePath = storage_path('app/public/' . $token . '.png');
+        file_put_contents($filePath, $qrCode);
+        $dateStr = date('Ymd');
+        $imagePath = asset('public/storage/'. $dateStr . '.png');
+
+        return response()->download($imagePath);
+    }
+
+    // --------------------------------------------
+    public function attendanceSummaryView(Request $request){
+        return view("admin.service.attendance.summary");
+    }
+
+    // --------------------------------------------
+    public function attendanceSummaryAPI(Request $request){
+
+        $serviceList = Service::where("end_at", "<", date("Y-m-d H:i:s"))->get();
+        $dataArray = array();
+
+        $count = 1;
+        foreach ($serviceList as $row)  {
+
+            $tempSlug = $row->slug;
+
+            $registCount = ServiceRegistation::where("service_slug", $tempSlug)->where("created_at","<", Carbon::parse($row->start_at))->count();
+            $attendCount = ServiceAttendance::where("service_slug", $tempSlug)->count();
+
+            $newcomerRegistIDArray = ServiceRegistation::where("service_slug", $tempSlug)->where("is_newcomer", true)->pluck("id")->toArray();  
+            $newcomerCount = ServiceAttendance::where("service_slug", $tempSlug)->whereIn("register_id", $newcomerRegistIDArray  )->count();
+
+            $attendTime = date("Y-m-d h:ia", strtotime($row->start_at));
+
+            $url = route("admin.service.attendance.select.html", ["service_slug" => $tempSlug]);
+            // No.
+            // 崇拜日期/時間
+            // 講題
+            // 講員
+            // 報名人數
+            // 出席人數
+            // 新朋友人數
+
+            $dataArray[] = array(
+                $count,
+                $attendTime,
+                $row->title,
+                $row->speaker,
+                $registCount,
+                $attendCount,
+                $newcomerCount,
+                $url,
+            );
+
+            $count++;
+        }
+
+        //  Output now
+        $response["data"] = $dataArray;
+        return response()->json($response);
+    }
+
+    // --------------------------------------------
+    public function attendanceServiceView(Request $request, $service_slug){
+
+        $service = Service::where("slug", $service_slug)->first();
+        if(!$service) {
+            return view("admin.service.attendance.summary");
+        }
+        $attendCount = ServiceAttendance::where("service_slug", $service_slug)->count();
+
+        return view("admin.service.attendance.detail",[
+            "service" => $service,
+            "attendance" => $attendCount,
+        ]);
+    }
+
+    // --------------------------------------------
+    public function attendanceServiceAPI(Request $request){
+
+        $slug = $request->input("slug");
+
+        $attendList = ServiceAttendance::where("service_slug", $slug)->get();
+        $dataArray = array();
+
+        $count = 1;
+        foreach ($attendList as $row)  {
+            $record = ServiceRegistation::where("id", $row->register_id)->first();
+            $isNewcomer = $record->is_newcomer == true ? 1 : 0 ;
+            $dataArray[] = array(
+                $count,
+                $row->name,
+                $record->recommend_by_name,
+                $isNewcomer
+            );
+            $count++;
+        }
+
+        //  Output now
+        $response["data"] = $dataArray;
+        return response()->json($response);
+
+    }
+    
 }

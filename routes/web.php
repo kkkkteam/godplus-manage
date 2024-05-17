@@ -58,11 +58,19 @@ Route::prefix('/admin')
                 Route::get('/registration/list-details/data', [ServiceController::class, 'registrationListDetailsAPI'])->name('registration.list.details.api');
                 Route::post('/registration/individual/attend', [ServiceController::class, 'registrationIndividualAttendAPI'])->name('registration.individual.attend.api');
                 
+                Route::get('/download-qrcode', [ServiceController::class, 'downloadServiceQRCodeAPI'])->name('download.qrcode.api');  
+
                 // attendance update page
                 Route::get('/attendance/update', [ServiceController::class, 'attendanceUpdateView'])->name('attendance.update.html');
                 Route::get('/attendance/list', [ServiceController::class, 'attendancelistAPI'])->name('attendance.list.api');
                 Route::post('/attendance/add', [ServiceController::class, 'attendanceAddAPI'])->name('attendance.add.api');
                 Route::post('/attendance/detele', [ServiceController::class, 'attendanceDeteleAPI'])->name('attendance.detele.api');
+                
+                Route::get('/attendance-summary', [ServiceController::class, 'attendanceSummaryView'])->name('attendance_summary.html');
+                Route::get('/attendance/summary/data', [ServiceController::class, 'attendanceSummaryAPI'])->name('attendance.summary.api');
+
+                Route::get('/attendance/select-one/{service_slug}', [ServiceController::class, 'attendanceServiceView'])->name('attendance.select.html');
+                Route::get('/attendance/detail', [ServiceController::class, 'attendanceServiceAPI'])->name('attendance.detail.api');
 
                 Route::get('/scan/qr-code', [ServiceController::class, 'scannerView'])->name('scan.html');
                 Route::post('/scan/show-list', [ServiceController::class, 'showRegistrationListAPI'])->name('scan.show.registration.api');

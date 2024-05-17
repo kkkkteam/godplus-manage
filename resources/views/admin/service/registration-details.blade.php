@@ -69,6 +69,7 @@
                     <button type="button" class="btn btn-info" onclick="selectServiceView()">Select</button><br>
                 </div>
             </div>
+            <div style="margin-top:10px;"><button type="button" class="btn btn-success" onclick="downloadQRcode()">Download：點名QR code</button></div>
             <hr>
             
             <div class='row'>
@@ -210,7 +211,30 @@
                 _table.ajax.reload(null, false);
             }
 
+            function downloadQRcode(){
+                var slug = $("#service").val();
+                var parameters = {
+                        slug:slug,
+                };
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: "get",
+                    dataType: "json",
+                    data: parameters,
+                    url: "{{ route('admin.service.download.qrcode.api')}}",
+                    success: function (result)  {
 
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown)  {
+                        alert("Oops...\n#"+textStatus+": "+errorThrown);
+                    }
+                });
+                return false;
+            }
         </script>
     </body>
 </html>

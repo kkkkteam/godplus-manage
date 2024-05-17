@@ -81,6 +81,8 @@ class ServiceAttendance extends Model
                 return false;
             }
 
+            $mobile = "852".$mobile;
+
             $registRecord = ServiceRegistation::create([
                 "name"          => $name,
                 "mobile"        => $mobile,

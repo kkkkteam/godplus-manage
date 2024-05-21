@@ -659,4 +659,77 @@ class ServiceController extends Controller
 
     }
     
+    // --------------------------------------------
+    public function attendanceServiceByPoepleView(Request $request){
+
+        $arrayTitle = [];
+
+        $now = date("Y-m-d H:i:s") ;
+        $serviceList = Service::where("end_at", "<" ,$now )->orderBy("start_at", "DESC")->select("title","start_at")->get()->toArray();
+
+        foreach ($serviceList as $row) {
+            $arrayTitle[] = date("y年m月d日", strtotime($row["start_at"]));
+        }
+
+        return view("admin.service.attendance.people",[
+            "arrayTitle" => $arrayTitle,
+            "serviceCount" => count($serviceList),
+        ]);
+    }
+
+    // --------------------------------------------
+    public function attendanceServiceByPoepleAPI(Request $request){
+
+        $now = date("Y-m-d H:i:s") ;
+        $memberWithMobileList = ServiceAttendance::where("mobile", "!=" , "")->groupBy('mobile')->pluck("mobile");
+        $memberWithoutMobileList = ServiceAttendance::where("mobile",  "")->groupBy('name')->pluck("name");
+        $serviceList = Service::where("end_at", "<" ,$now )->orderBy("start_at", "DESC")->get();
+
+        $dataArray = array();
+
+        $count = 1;
+        foreach ($memberWithMobileList as $row)  {
+            $record = ServiceAttendance::where("mobile", $row)->get();
+            $member = ChurchMember::where("mobile", $row)->first();
+            $string = $count.",";
+            $string .= $member->nickname ?? " ";
+
+            foreach ($serviceList as $service) {
+                $attend = $record->where("service_slug", $service->slug)->first();
+                if ($attend) {
+                    $string .= ",".date("h:sa", strtotime($attend->updated_at));
+                }else{
+                    $string .= ", ";
+                }
+            }
+
+            $dataArray[] = explode(",", $string);
+            $count++;
+        }
+
+
+        foreach ($memberWithoutMobileList as $row)  {
+            $record = ServiceAttendance::where("name", $row)->get();
+            $string = $count.",";
+            $string .= $row ?? " ";
+
+            foreach ($serviceList as $service) {
+                $attend = $record->where("service_slug", $service->slug)->first();
+                if ($attend) {
+                    $string .= ",".date("h:sa", strtotime($attend->updated_at));
+                }else{
+                    $string .= ", ";
+                }
+            }
+
+            $dataArray[] = explode(",", $string);
+            $count++;
+        }
+
+        //  Output now
+        $response["data"] = $dataArray;
+        return response()->json($response);
+
+    }
+    
 }

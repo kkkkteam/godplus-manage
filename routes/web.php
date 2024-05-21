@@ -71,6 +71,9 @@ Route::prefix('/admin')
 
                 Route::get('/attendance/select-one/{service_slug}', [ServiceController::class, 'attendanceServiceView'])->name('attendance.select.html');
                 Route::get('/attendance/detail', [ServiceController::class, 'attendanceServiceAPI'])->name('attendance.detail.api');
+                
+                Route::get('/attendance-summary/by-people', [ServiceController::class, 'attendanceServiceByPoepleView'])->name('attendance.by.poeple.html');
+                Route::get('/attendance/by-people/data', [ServiceController::class, 'attendanceServiceByPoepleAPI'])->name('attendance.by.poeple.api');
 
                 Route::get('/scan/qr-code', [ServiceController::class, 'scannerView'])->name('scan.html');
                 Route::post('/scan/show-list', [ServiceController::class, 'showRegistrationListAPI'])->name('scan.show.registration.api');

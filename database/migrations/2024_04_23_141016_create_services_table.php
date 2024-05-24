@@ -16,6 +16,7 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->char('slug', length: 24);
+            $table->datetime('public_at')->nullable();
             $table->datetime('start_at')->nullable();
             $table->datetime('end_at')->nullable();
             $table->char('title', length: 64);

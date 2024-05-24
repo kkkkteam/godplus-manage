@@ -33,6 +33,7 @@ class ServiceController extends Controller
                 $row->start_at,
 				$row->title,
 				$row->speaker,
+				$row->public_at,
 			);
 		}
 
@@ -62,11 +63,15 @@ class ServiceController extends Controller
         if($service){
             $date = substr($service->start_at, 0, 10);
             $time = substr($service->start_at, 11, 10);
+            $publicDate  = substr($service->public_at, 0, 10);
+            $publicTime  = substr($service->public_at, 11, 10);
 
             return view("admin.service.update",[
                 "service" => $service,
                 "date" => $date,
                 "time" => $time,
+                "public_date" => $publicDate,
+                "public_time" => $publicTime,
             ]);
         }
 
@@ -103,6 +108,8 @@ class ServiceController extends Controller
             $carbon_start= Carbon::parse($request->start_date." ".$request->start_time);
             $service->start_at = $carbon_start;
             $service->end_at = date("Y-m-d H:i:s", strtotime("+2 hours", strtotime($carbon_start) ));
+            $carbon_public= Carbon::parse($request->public_date." ".$request->public_time);
+            $service->public_at = $carbon_public;
             $service->save();
 
             $response["status"] = 0;
@@ -118,7 +125,7 @@ class ServiceController extends Controller
 
         $mobile = $request->input("m") ?? "";
 
-        $serviceList = Service::where("end_at", ">",Carbon::now())->select("slug", "start_at","title")->get()->toArray();
+        $serviceList = Service::where("public_at", "<",Carbon::now())->where("end_at", ">",Carbon::now())->select("slug", "start_at","title")->get()->toArray();
         $array = [];
         foreach($serviceList as $service){
             $array[]=[

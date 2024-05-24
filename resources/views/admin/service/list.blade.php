@@ -36,7 +36,7 @@
         </style>
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
-@include('admin.layout.menu')
+<!-- @include('admin.layout.menu') -->
         <form id="commandForm">
             <h3>GodPlus+ 崇拜 list</h3>
             <div class="name-input">
@@ -51,12 +51,22 @@
             </div>
             <div class="name-input">
                 <div>
-                    <label for="meeting_date">日期</label>
+                    <label for="meeting_date">(舉行崇拜)日期</label>
                     <input type="date" id="meeting_date" name="meeting_date" required>
                 </div>
                 <div>
                     <label for="meeting_time">開始時間</label>
                     <input type="time" id="meeting_time" name="meeting_time" style="width:200px;padding:5px;" required>
+                </div>
+            </div>
+            <div class="name-input">
+                <div>
+                    <label for="public_date"  style="color:#c5853a;">(發佈及報名詳情)日期</label>
+                    <input type="date" id="public_date" name="public_date" required>
+                </div>
+                <div>
+                    <label for="public_time"  style="color:#c5853a;">開始時間</label>
+                    <input type="time" id="public_time" name="public_time" style="width:200px;padding:5px;" required>
                 </div>
             </div>
             <button type="button" class="btn btn-primary" onclick="addService()" style="margin-top:20px;">Add 崇拜</button><br>
@@ -73,9 +83,11 @@
                             <th>日期</th>
 							<th>崇拜主題</th>
 							<th>講員</th>
+							<th>發佈日期</th>
                             <th>Action</th>
 						</tr></thead>
 						<tfoot><tr>
+							<th>Search</th>
 							<th>Search</th>
 							<th>Search</th>
 							<th>Search</th>
@@ -98,15 +110,19 @@
 
             function addService(){
 
-                var title   = document.getElementById("title").value;
-                var date    = document.getElementById("meeting_date").value;
-                var time    = document.getElementById("meeting_time").value;
-                var speaker = document.getElementById("speaker").value;
+                var title           = document.getElementById("title").value;
+                var date            = document.getElementById("meeting_date").value;
+                var time            = document.getElementById("meeting_time").value;
+                var public_date     = document.getElementById("public_date").value;
+                var public_time     = document.getElementById("public_time").value;
+                var speaker         = document.getElementById("speaker").value;
 
                 var data = {
                     title:title,
                     start_date:date,
                     start_time:time,
+                    public_date:public_date,
+                    public_time:public_time,
                     speaker:speaker,
                 };
 
@@ -157,7 +173,7 @@
                         {targets:0, width:"20px"},
                         {targets:1, visible:false},
                         {targets:2, width:"200px"},
-                        {targets:5, data:null, width:"180px", defaultContent:
+                        {targets:6, data:null, width:"180px", defaultContent:
                             "<button class='btn btn-sm btn-success updateButton'><i class='fa fa-envelope-o'></i> Update</button><br>"
                         },
                     ],

@@ -49,12 +49,24 @@
 
             <div class="name-input">
                 <div>
-                    <label for="meeting_date">日期</label>
+                    <label for="meeting_date">(舉行崇拜)日期</label>
                     <input type="date" id="meeting_date" name="meeting_date" value="{{ $date }}" required>
                 </div>
                 <div>
                     <label for="meeting_time">開始時間</label>
                     <input type="time" id="meeting_time" name="meeting_time" style="width:200px;padding:5px;" value="{{ $time}}" required>
+                </div>
+            </div>
+
+
+            <div class="name-input">
+                <div>
+                    <label for="public_date" style="color:#c5853a;">(發佈及報名詳情)日期</label>
+                    <input type="date" id="public_date" name="public_date" value="{{ $public_date }}" required>
+                </div>
+                <div>
+                    <label for="public_time" style="color:#c5853a;">開始時間</label>
+                    <input type="time" id="public_time" name="public_time" style="width:200px;padding:5px;" value="{{ $public_time}}" required>
                 </div>
             </div>
 
@@ -72,6 +84,8 @@
                 var title   = document.getElementById("title").value;
                 var date    = document.getElementById("meeting_date").value;
                 var time    = document.getElementById("meeting_time").value;
+                var public_date     = document.getElementById("public_date").value;
+                var public_time     = document.getElementById("public_time").value;
                 var speaker = document.getElementById("speaker").value;
                 var slug    = document.getElementById("slug").value;
 
@@ -80,6 +94,8 @@
                     start_date:date,
                     start_time:time,
                     speaker:speaker,
+                    public_date:public_date,
+                    public_time:public_time,
                     slug:slug
                 };
 

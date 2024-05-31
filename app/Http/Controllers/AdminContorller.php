@@ -70,8 +70,8 @@ class AdminContorller extends Controller
 			$dataArray[] = array(
 				$row->id,
 				$row->command,
-                $row->reply,
-				$row->reply_with_name,
+                str_replace(array("\r", "\n", "\r\n", "\n\r"), '<br>', $row->reply),
+                str_replace(array("\r", "\n", "\r\n", "\n\r"), '<br>', $row->reply_with_name),
 			);
 		}
 

@@ -85,7 +85,7 @@
 
         </form>
 
-        <form id="commandForm" style="margin-top:10px;background:#c7e6f2;">
+        <form id="commandForm" style="margin-top:10px;background:#fcfbf0;">
             <h3>GodPlus+ | 崇拜點名 Whatsapp</h3>
             <!-- <div class="name-input">
                 <div>
@@ -179,7 +179,7 @@
                     searching: true,
                     lengthChange: false,
                     buttons: ["csv", "excel", "copy"],
-                    order: [[0, "desc"]],
+                    order: [[0, "asc"]],
                     dom: "Bfrtip",
 
                     ajax: {
@@ -283,7 +283,7 @@
                     searching: true,
                     lengthChange: false,
                     buttons: ["csv", "excel", "copy"],
-                    order: [[0, "desc"]],
+                    order: [[0, "asc"]],
                     dom: "Bfrtip",
 
                     ajax: {

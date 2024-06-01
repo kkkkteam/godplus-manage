@@ -38,7 +38,7 @@
         </style>
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
-@include('admin.layout.menu')
+<!-- @include('admin.layout.menu') -->
         <form id="commandForm">
             <h3>GodPlus+ | Whatsapp List</h3>
             <div>
@@ -76,6 +76,46 @@
 							<th>Search</th>
 							<th>Search</th>
 							<th></th>
+						</tr></tfoot>
+					</table>
+
+				</div>
+			</div>
+		</div>
+
+        </form>
+
+        <form id="commandForm" style="margin-top:10px;background:#c7e6f2;">
+            <h3>GodPlus+ | 崇拜點名 Whatsapp</h3>
+            <!-- <div class="name-input">
+                <div>
+                    <label for="welcome_times">到來次數:( 1:第一次來，2:第二次，如此類推，如有range用「-」表示，例如3-5｜0:default message)</label>
+                    <input type="text" id="welcome_times" name="welcome_times" required></input>
+                </div>
+                <div>
+                    <label for="welcome_message">回覆信息: ( 報名名字:__NAME__ )</label>
+                    <textarea type="text" id="welcome_message" name="welcome_message" required></textarea>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addWelcomeMessage()">Add 歡迎訊息</button><br>
+            <hr> -->
+
+            <div class='row'>
+			<div class=' col-sm-12'>
+				<div class="table-responsive">
+
+					<table class="table table-bordered table-hover" data-name="cool-table2" id="dataTable2">
+						<thead><tr>
+							<th>No.</th>
+							<th>到來次數</th>
+                            <th>訊息內容</th>
+                            <th>Action</th>
+						</tr></thead>
+						<tfoot><tr>
+							<th>Search</th>
+							<th>Search</th>
+							<th>Search</th>
+							<th>Search</th>
 						</tr></tfoot>
 					</table>
 
@@ -125,6 +165,7 @@
 
             $(document).ready(function()  {
 
+                // whatsapp list ----------------------------------------------
                 $("#dataTable tfoot th").each(function()  {
                     var title = $(this).text();
                     $(this).html('<input type="text" placeholder="'+title+'" style="width:100%;"/>');
@@ -166,68 +207,141 @@
                     });
                 });
 
+                //  Action buttons
+                $("#dataTable tbody").on("click", "button.updateButton", function()  {
+                    var data = _table.row($(this).parents("tr")).data();
+                    var id = data[0];
+                    var parameters = {
+                        id:id,
+                    };
 
-            //  Action buttons
-            $("#dataTable tbody").on("click", "button.updateButton", function()  {
-                var data = _table.row($(this).parents("tr")).data();
-                var id = data[0];
-                var parameters = {
-                    id:id,
-                };
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    data: parameters,
-                    url: "{{ route('admin.command.update.action') }}",
-                    success: function (result)  {
-                        if (result.status == 0)  {
-                            window.location.href = result.url;
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         }
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown)  {
-                        alert("Oops...\n#"+textStatus+": "+errorThrown);
-                    }
-                });
-                return false;
-            });
-
-            $("#dataTable tbody").on("click", "button.deleteButton", function()  {
-                var data = _table.row($(this).parents("tr")).data();
-                var id = data[0];
-                var parameters = {
-                    id:id
-                };
-
-                var url = "{{ route('admin.command.delete.api') }}";
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    data: parameters,
-                    url: url,
-                    success: function (result)  {
-                        if (result.status == 0)  {
-                            _table.ajax.reload(null, false);
-                            alert("Deleted.");
+                    });
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        data: parameters,
+                        url: "{{ route('admin.command.update.action') }}",
+                        success: function (result)  {
+                            if (result.status == 0)  {
+                                window.location.href = result.url;
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown)  {
+                            alert("Oops...\n#"+textStatus+": "+errorThrown);
                         }
-                    },
-                    error: function (XMLHttpRequest, textStatus, errorThrown)  {
-                        alert("Oops...\n#"+textStatus+": "+errorThrown);
-                    }
+                    });
+                    return false;
                 });
-                return false;
+
+                $("#dataTable tbody").on("click", "button.deleteButton", function()  {
+                    var data = _table.row($(this).parents("tr")).data();
+                    var id = data[0];
+                    var parameters = {
+                        id:id
+                    };
+
+                    var url = "{{ route('admin.command.delete.api') }}";
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        data: parameters,
+                        url: url,
+                        success: function (result)  {
+                            if (result.status == 0)  {
+                                _table.ajax.reload(null, false);
+                                alert("Deleted.");
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown)  {
+                            alert("Oops...\n#"+textStatus+": "+errorThrown);
+                        }
+                    });
+                    return false;
+                });
+
+
+                // Welcome Message list ----------------------------------------------
+                $("#dataTable2 tfoot th").each(function()  {
+                    var title = $(this).text();
+                    $(this).html('<input type="text" placeholder="'+title+'" style="width:100%;"/>');
+                });
+
+                _table = $("#dataTable2").DataTable({
+                    info: true,
+                    paging: true,
+                    ordering: true,
+                    autoWidth: true,
+                    searching: true,
+                    lengthChange: false,
+                    buttons: ["csv", "excel", "copy"],
+                    order: [[0, "desc"]],
+                    dom: "Bfrtip",
+
+                    ajax: {
+                        url: '{{ route("admin.command.get.welcome.list.api")}}',
+                    },
+
+                    columnDefs: [
+                        {targets:0, width:"20px"},
+                        {targets:1, width:"180px"},
+                        {targets:3, data:null, width:"200px", defaultContent:
+                            "<button class='btn btn-sm btn-success updateButton2'><i class='fa fa-envelope-o'></i> Update</button>"
+                        },
+                    ],
+
+                });
+
+                _table.columns().every(function()  {
+                    var that = this;
+                    $('input', this.footer()).on('keyup change clear', function()  {
+                        if (that.search() !== this.value)  {
+                            that
+                            .search( this.value )
+                            .draw();
+                        }
+                    });
+                });
+
+                //  Action buttons
+                $("#dataTable tbody").on("click", "button.updateButton2", function()  {
+                    var data = _table.row($(this).parents("tr")).data();
+                    var id = data[0];
+                    var parameters = {
+                        id:id,
+                    };
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+                        data: parameters,
+                        url: "{{ route('admin.command.welcome.update.action') }}",
+                        success: function (result)  {
+                            if (result.status == 0)  {
+                                window.location.href = result.url;
+                            }
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown)  {
+                            alert("Oops...\n#"+textStatus+": "+errorThrown);
+                        }
+                    });
+                    return false;
+                });
+
             });
-        });
        
         </script>
 

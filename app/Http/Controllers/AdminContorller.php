@@ -8,6 +8,7 @@ use App\Http\Controllers\EmailController;
 use Illuminate\Http\Request;
 use App\Models\ChurchMember;
 use App\Models\ChatCommand;
+use App\Models\ChatWelcomeCommand;
 
 class AdminContorller extends Controller
 {
@@ -168,4 +169,100 @@ class AdminContorller extends Controller
         return response()->json($result);
 
     }
+
+    //-----------------------------------------------------------
+    public function getWelcomeMessageListAPI(Request $request)  {
+
+        $array = ChatWelcomeCommand::getList();
+
+		$dataArray = array();
+		foreach ($array as $row)  {
+
+            $str = "";
+            if ($row->id == 1){
+                $str = "第1次";
+            } elseif ($row->id == 2){
+                $str = "第2-3次";
+            } else{
+                $str = "會眾";
+            }
+
+			$dataArray[] = array(
+                $row->id,
+				$str,
+                str_replace(array("\r", "\n", "\r\n", "\n\r"), '<br>', $row->message),
+			);
+		}
+
+		//  Output now
+		$response["data"] = $dataArray;
+		return response()->json($response);
+
+    }
+    
+    //-----------------------------------------------------------
+    public function updateWelcomeMessageActionAPI(Request $request)  {
+
+        $command = ChatWelcomeCommand::where("id",$request->id)->first();
+        if ($command) {
+            $result["status"] = 0;
+            $result["url"] = route("admin.command.welcome.update.html", ["id" => $command->id]);
+        }else{
+            $result["status"] = -1;
+        }
+
+        return response()->json($result);
+        
+    }
+
+    //-----------------------------------------------------------
+    public function updateWelcomeMessageView(Request $request)  {
+
+        $command = ChatWelcomeCommand::where("id",$request->id)->first();
+
+        if ($command) {
+
+            $str = "";
+            if ($request->id == 1){
+                $str = "第1次";
+            } elseif ($request->id == 2){
+                $str = "第2-3次";
+            } else{
+                $str = "會眾";
+            }
+
+            return view("admin.whatsapp.welcome_update",[
+                "id" => $request->id,
+                "times" => $str,
+                "command" => $command,
+            ]);
+
+        }else{
+            return view("admin.whatsapp.list");
+        }
+    
+    }
+
+    //-----------------------------------------------------------
+    public function updateWelcomeMessageAPI(Request $request)  {
+
+        $command = ChatWelcomeCommand::where("id",$request->id)->first();
+
+        $result = [];
+
+        if ($command) {
+            $command->message = $request->command;
+            $command->save();
+
+            $result["status"] = 0;
+            $result["url"] = route("admin.command.list.html");
+        }else{
+            $result["status"] = -1;
+        }
+
+        return response()->json($result);
+
+    }
+
+
 }

@@ -15,39 +15,42 @@ class ServiceAttendance extends Model
     //-------------------------------------------------
     public static function makeAttendanceById($IDArray, $serviceSlug){
 
-        if(count($IDArray) == 0 || strlen($serviceSlug) == 0){
-            return "未有找到記錄，可找招待員幫忙點名，或即場報名👇🏼\n\nhttps://godplus-manage.site/member/service/join";
-        }
-
-        $registationList = ServiceRegistation::where("service_slug", $serviceSlug)
-                            ->whereIn("id", $IDArray)
-                            ->where("attended", 0)
-                            ->get();
-
         $applicantName = "";
         $companyNameList = "";
         $count = 1;
         $mobile = "";
 
-        foreach($registationList as $attend){
-            $attendance = new ServiceAttendance();
-            $attendance->register_id = $attend->id; 
-            $attendance->name = $attend->name;
-            $attendance->service_slug = $serviceSlug;
-            $attendance->mobile = is_null($attend->mobile) ? "" : $attend->mobile;
-            $attendance->save();
+        if(count($IDArray) == 0 || strlen($serviceSlug) == 0){
+            return "未有找到記錄，可找招待員幫忙點名，或即場報名👇🏼\n\nhttps://godplus-manage.site/member/service/join";
+        }else{
+            $registationList = ServiceRegistation::where("service_slug", $serviceSlug)
+            ->whereIn("id", $IDArray)
+            ->where("attended", 0)
+            ->get();
 
-            $attend->attended = true;
-            $attend->save();
+            foreach($registationList as $attend){
+                $attendance = new ServiceAttendance();
+                $attendance->register_id = $attend->id; 
+                $attendance->name = $attend->name;
+                $attendance->service_slug = $serviceSlug;
+                $attendance->mobile = is_null($attend->mobile) ? "" : $attend->mobile;
+                $attendance->save();
 
-            if (is_null($attend->mobile)){
-                $companyNameList .= $count.". ".$attend->name;
-                $count++;
-            }else{
-                $applicantName = $attend->name;
-                $mobile = $attend->mobile;
+                $attend->attended = true;
+                $attend->save();
+
+                if (is_null($attend->mobile)){
+                    $companyNameList .= $count.". ".$attend->name;
+                    $count++;
+                }else{
+                    $applicantName = $attend->name;
+                    $mobile = $attend->mobile;
+                }
             }
+
         }
+
+
 
         $attendenceTime = ServiceAttendance::where("mobile", $mobile)->count();
 

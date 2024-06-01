@@ -36,6 +36,14 @@ Route::prefix('/admin')
                 Route::post('/action', [AdminContorller::class, 'updateActionAPI'])->name('update.action');
                 Route::get('/update', [AdminContorller::class, 'updateCommandView'])->name('update.html');
                 Route::post('/update-action', [AdminContorller::class, 'updateCommandAPI'])->name('update.api');
+
+                Route::get('/welcome-message/list', [AdminContorller::class, 'getWelcomeMessageListAPI'])->name('get.welcome.list.api');
+                // Route::post('/welcome-message/set', [AdminContorller::class, 'setWelcomeMessageAPI'])->name('welcome.set.api');
+                // Route::post('/welcome-message/delete', [AdminContorller::class, 'deleteWelcomeMessageAPI'])->name('welcome.delete.api');
+
+                Route::post('/welcome-message/action', [AdminContorller::class, 'updateWelcomeMessageActionAPI'])->name('welcome.update.action');
+                Route::get('/welcome-message/update', [AdminContorller::class, 'updateWelcomeMessageView'])->name('welcome.update.html');
+                Route::post('/welcome-message/update-action', [AdminContorller::class, 'updateWelcomeMessageAPI'])->name('welcome.update.api');
                 
         });
 

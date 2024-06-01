@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
-use App\Models\ServiceRegistation;
+
 use Illuminate\Http\Request;
 use Twilio\Rest\Client;
 
+use App\Models\ServiceRegistation;
 use App\Models\ServiceAttendance;
 use App\Models\WhatsappWebhook;
 use App\Models\WhatsappSendOut;
@@ -102,7 +103,7 @@ class WhatsppController extends Controller
 			WhatsappSendOut::create([
 				"from" 			=> str_replace("whatsapp:+","",$sender),
 				"to" 			=> str_replace("whatsapp:+","",$receiver),
-				"body" 			=> json_decode($response, true)["body"],
+				"body" 			=> json_decode($response, true)["Body"],
 				"content" 		=> $response, //JSON format
 			]);
 
@@ -168,6 +169,29 @@ class WhatsppController extends Controller
 								->where(function($list) use ($mobile)  {
 									$list->where("mobile", $mobile)->orWhere("recommend_by_mobile", $mobile);
 								})->pluck("id")->toArray();
+
+			if(count($attendanceIDList) == 0){
+				$memberExist = ChurchMember::where("mobile", $mobile)->first();
+				if (!$memberExist){
+					$webhook = WhatsappWebhook::where("to", $mobile)->orderBy("created_at", "desc")->first();
+					$registration = ServiceRegistation::create([
+						"name" => $webhook->profile_name,
+						"mobile" => $mobile, 
+						"is_newcomer" => true,
+						"service_slug" => $msgPieces[1]
+					]);
+				}else{
+					$registration = ServiceRegistation::create([
+						"name" => $memberExist->nickname,
+						"mobile" => $mobile, 
+						"is_newcomer" => false,
+						"service_slug" => $msgPieces[1]
+					]);
+				}
+
+				$attendanceIDList = array($registration->id);
+			}
+
 			$messageOut = ServiceAttendance::makeAttendanceById($attendanceIDList, $msgPieces[1]);
 
 		} else {

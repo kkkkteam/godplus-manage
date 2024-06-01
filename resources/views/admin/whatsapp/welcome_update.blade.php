@@ -34,10 +34,10 @@
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
         <form id="updateForm">
-            <h3>Welcome Message : {{ $times }} 更新</h3>
+            <h3>Welcome Message：[ {{ $times }} ]到更新</h3>
             <div>
                 <label for="command">Whatsapp內容:</label>
-                <input type="text" id="command" name="command" value="{{ $command }}" required>
+                <textarea type="text" id="command" name="command" value="{{ $command }}" required></textarea>
             </div>
             <button type="button" class="btn btn-primary" onclick="updateWelcomeCommand()">update 回應</button><br>
 

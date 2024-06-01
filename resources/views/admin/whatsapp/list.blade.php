@@ -312,7 +312,7 @@
                 });
 
                 //  Action buttons
-                $("#dataTable tbody").on("click", "button.updateButton2", function()  {
+                $("#dataTable2 tbody").on("click", "button.updateButton2", function()  {
                     var data = _table.row($(this).parents("tr")).data();
                     var id = data[0];
                     var parameters = {

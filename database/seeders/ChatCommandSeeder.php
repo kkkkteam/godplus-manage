@@ -31,3 +31,5 @@ class ChatCommandSeeder extends Seeder
 
     }
 }
+
+

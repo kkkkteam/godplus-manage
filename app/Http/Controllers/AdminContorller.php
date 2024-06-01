@@ -234,7 +234,7 @@ class AdminContorller extends Controller
             return view("admin.whatsapp.welcome_update",[
                 "id" => $request->id,
                 "times" => $str,
-                "command" => $command,
+                "command" => $command->message,
             ]);
 
         }else{

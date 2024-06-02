@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\ServiceRegistation;
+use App\Models\ChatWelcomeCommand;
 use App\Models\Service;
 class ServiceAttendance extends Model
 {
@@ -50,17 +51,16 @@ class ServiceAttendance extends Model
 
         }
 
-
-
         $attendenceTime = ServiceAttendance::where("mobile", $mobile)->count();
 
         if($attendenceTime > 3){        // Normal 
-            $message = $applicantName." 很高興你回到God Plus神家當中，願你多多領受神的感動。💞\n";
+            $command = ChatWelcomeCommand::where("id", 3)->first();
         }elseif($attendenceTime > 1){   // 2nd-3rd time
-            $message = "啦啦啦～～🎶 \n咦？😮係你啊？😝\n好開心今日又見到你❤️\nWelcome Home!!!";
+            $command = ChatWelcomeCommand::where("id", 2)->first();
         }else{                          // 1st time
-            $message = $applicantName." Welcome Home！\n初次見面！好高興認識你😆\nChill~Relax~Warm~\n呢到就係你既屋企😉\n";
+            $command = ChatWelcomeCommand::where("id", 1)->first();
         }
+        $message = str_replace('__NAME__', $applicantName, $command->message);
 
         if($count > 1){
             $message .= "\n"."已為你和你以下的家人/朋友點名\n".$companyNameList."\n現邀請你地跟招待員入場";

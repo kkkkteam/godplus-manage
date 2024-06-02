@@ -21,6 +21,7 @@
         <style>
             textarea{
                 width:100%;
+                min-height:200px;
             }
 
             h3{
@@ -28,16 +29,16 @@
             }
 
             form{
-                max-width: 100%;
+                max-width: 800px;
             }
         </style>
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
         <form id="updateForm">
-            <h3>Welcome Message：[ {{ $times }} ]到更新</h3>
+            <h3>Welcome Message：[ {{ $times }} ] 更新</h3>
             <div>
-                <label for="command">Whatsapp內容:</label>
-                <textarea type="text" id="command" name="command" value="{{ $command }}" required></textarea>
+                <label for="command">Whatsapp內容: （會友名字:__NAME__）</label>
+                <textarea type="text" id="command" name="command" required>{{ $command }}</textarea>
             </div>
             <button type="button" class="btn btn-primary" onclick="updateWelcomeCommand()">update 回應</button><br>
 

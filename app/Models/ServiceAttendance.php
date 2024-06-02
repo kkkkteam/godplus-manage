@@ -83,8 +83,13 @@ class ServiceAttendance extends Model
             if ($service == null){
                 return false;
             }
-
-            $mobile = "852".$mobile;
+            
+            if (strlen($mobile) > 7 ){
+                $mobile = "852".$mobile;
+            }else{
+                $mobile = "";
+            }
+            
 
             $registRecord = ServiceRegistation::create([
                 "name"          => $name,

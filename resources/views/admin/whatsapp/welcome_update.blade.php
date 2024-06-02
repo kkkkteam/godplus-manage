@@ -21,7 +21,7 @@
         <style>
             textarea{
                 width:100%;
-                min-height:200px;
+                min-height: 250px;
             }
 
             h3{
@@ -29,7 +29,8 @@
             }
 
             form{
-                max-width: 800px;
+                width:70%;
+                min-width: 300px;
             }
         </style>
     </head>

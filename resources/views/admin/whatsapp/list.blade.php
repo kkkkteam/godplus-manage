@@ -87,19 +87,6 @@
 
         <form id="commandForm" style="margin-top:10px;background:#fcfbf0;">
             <h3>GodPlus+ | 崇拜點名 Whatsapp</h3>
-            <!-- <div class="name-input">
-                <div>
-                    <label for="welcome_times">到來次數:( 1:第一次來，2:第二次，如此類推，如有range用「-」表示，例如3-5｜0:default message)</label>
-                    <input type="text" id="welcome_times" name="welcome_times" required></input>
-                </div>
-                <div>
-                    <label for="welcome_message">回覆信息: ( 報名名字:__NAME__ )</label>
-                    <textarea type="text" id="welcome_message" name="welcome_message" required></textarea>
-                </div>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="addWelcomeMessage()">Add 歡迎訊息</button><br>
-            <hr> -->
-
             <div class='row'>
 			<div class=' col-sm-12'>
 				<div class="table-responsive">

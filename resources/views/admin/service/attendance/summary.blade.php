@@ -30,12 +30,12 @@
             }
             button#people{
                 position: absolute;
-                top: 5%;
+                top: 3%;
                 right: 25%;
             }
             @media screen and (max-width: 500px) {
                 button#people{
-                    top: 5px;
+                    top: 3px;
                     right: 5px;
                 }
             }

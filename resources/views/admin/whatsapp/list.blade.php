@@ -258,11 +258,11 @@
 
                 // Welcome Message list ----------------------------------------------
                 $("#dataTable2 tfoot th").each(function()  {
-                    var title = $(this).text();
-                    $(this).html('<input type="text" placeholder="'+title+'" style="width:100%;"/>');
+                    var title2 = $(this).text();
+                    $(this).html('<input type="text" placeholder="'+title2+'" style="width:100%;"/>');
                 });
 
-                _table = $("#dataTable2").DataTable({
+                _table2 = $("#dataTable2").DataTable({
                     info: true,
                     paging: true,
                     ordering: true,
@@ -287,7 +287,7 @@
 
                 });
 
-                _table.columns().every(function()  {
+                _table2.columns().every(function()  {
                     var that = this;
                     $('input', this.footer()).on('keyup change clear', function()  {
                         if (that.search() !== this.value)  {
@@ -300,7 +300,7 @@
 
                 //  Action buttons
                 $("#dataTable2 tbody").on("click", "button.updateButton2", function()  {
-                    var data = _table.row($(this).parents("tr")).data();
+                    var data = _table2.row($(this).parents("tr")).data();
                     var id = data[0];
                     var parameters = {
                         id:id,

@@ -53,7 +53,9 @@ class ServiceAttendance extends Model
 
         $attendenceTime = ServiceAttendance::where("mobile", $mobile)->count();
 
-        if($attendenceTime > 3){        // Normal 
+        if($attendenceTime > 4){        // Normal 
+            $command = ChatWelcomeCommand::where("id", 4)->first();
+        }elseif($attendenceTime > 3){   // 4th time
             $command = ChatWelcomeCommand::where("id", 3)->first();
         }elseif($attendenceTime > 1){   // 2nd-3rd time
             $command = ChatWelcomeCommand::where("id", 2)->first();
@@ -63,9 +65,9 @@ class ServiceAttendance extends Model
         $message = str_replace('__NAME__', $applicantName, $command->message);
 
         if($count > 1){
-            $message .= "\n"."已為你和你以下的家人/朋友點名\n".$companyNameList."\n現邀請你地跟招待員入場";
+            $message .= "\n\n"."已為你和你以下的家人/朋友點名\n".$companyNameList."\n現邀請你地跟招待員入場";
         }else{
-            $message .= "\n"."已為你點名，現邀請你跟招待員入場，一同敬拜神。";
+            $message .= "\n\n"."已為你點名，現邀請你跟招待員入場，一同敬拜神。";
         }
 
         return $message;

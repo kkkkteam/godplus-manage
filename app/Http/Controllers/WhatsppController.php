@@ -174,6 +174,12 @@ class WhatsppController extends Controller
 				$memberExist = ChurchMember::where("mobile", $mobile)->first();
 				if (!$memberExist){
 					$webhook = WhatsappWebhook::where("to", $mobile)->orderBy("created_at", "desc")->first();
+
+					$memberCreat = ChurchMember::create([
+						"nickname" => $webhook->profile_name,
+						"mobile" => $mobile, 
+					]);
+
 					$registration = ServiceRegistation::create([
 						"name" => $webhook->profile_name,
 						"mobile" => $mobile, 

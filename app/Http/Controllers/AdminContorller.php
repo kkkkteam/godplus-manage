@@ -179,12 +179,19 @@ class AdminContorller extends Controller
 		foreach ($array as $row)  {
 
             $str = "";
-            if ($row->id == 1){
-                $str = "第1次";
-            } elseif ($row->id == 2){
-                $str = "第2-3次";
-            } else{
-                $str = "會眾";
+            switch($row->id){
+                case 1:
+                    $str = "第1次";
+                    break;
+                case 2:
+                    $str = "第2-3次";
+                    break;
+                case 3:
+                    $str = "第4次";
+                    break;
+                default:
+                    $str = "會眾";
+                    break;
             }
 
 			$dataArray[] = array(

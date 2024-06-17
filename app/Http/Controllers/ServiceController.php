@@ -699,7 +699,12 @@ class ServiceController extends Controller
             $record = ServiceAttendance::where("mobile", $row)->get();
             $member = ChurchMember::where("mobile", $row)->first();
             $string = $count.",";
-            $string .= $member->nickname ?? " ";
+
+            if (!is_null($member->surname_zh) && !is_null($member->lastname_zh)){
+                $string .= $member->lastname_zh.$member->surname_zh ;
+            }else{
+                $string .= $member->nickname ?? "";
+            }
 
             foreach ($serviceList as $service) {
                 $attend = $record->where("service_slug", $service->slug)->first();

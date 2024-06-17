@@ -234,6 +234,8 @@ class AdminContorller extends Controller
                 $str = "第1次";
             } elseif ($request->id == 2){
                 $str = "第2-3次";
+            } elseif ($request->id == 3){
+                $str = "第4次";
             } else{
                 $str = "會眾";
             }

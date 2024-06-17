@@ -14,8 +14,12 @@ class ChurchMember extends Eloquent
     
     // ------------------------------------------------------------------------------------------
     public static function createMember($informationArray, $mobile)  {
+
+        if (strlen($mobile) == 8){
+            $mobile = "852".$mobile;
+        }
         
-        $member = ChurchMember::where("mobile", "852".$mobile)->first();
+        $member = ChurchMember::where("mobile", $mobile)->first();
         $result = [];
         $result["status"] = -1;
 
@@ -28,7 +32,7 @@ class ChurchMember extends Eloquent
             $member = new self;
             $member->fill($informationArray);
             $member->slug   = $slug;
-            $member->mobile = "852".$mobile;
+            $member->mobile = $mobile;
             $member->save();
 
             $result["status"] = 0;
@@ -46,8 +50,12 @@ class ChurchMember extends Eloquent
 
         // ------------------------------------------------------------------------------------------
         public static function createMemberByService($nickname, $mobile)  {
+
+            if (strlen($mobile) == 8){
+                $mobile = "852".$mobile;
+            }
         
-            $member = ChurchMember::where("mobile", "852".$mobile)->first();
+            $member = ChurchMember::where("mobile", $mobile)->first();
             $result = [];
             $result["status"] = -1;
     
@@ -60,7 +68,7 @@ class ChurchMember extends Eloquent
                 $member = new self;
                 $member->nickname = $nickname;
                 $member->slug   = $slug;
-                $member->mobile = "852".$mobile;
+                $member->mobile = $mobile;
                 $member->save();
     
                 $result["status"] = 0;

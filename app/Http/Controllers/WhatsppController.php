@@ -70,7 +70,6 @@ class WhatsppController extends Controller
 				"Body" 	=> $messageOutArray["text"],
 			];
 		}
-
 		$response = $this->sendingAction($messageArray);
 
 		if($response){
@@ -175,10 +174,9 @@ class WhatsppController extends Controller
 				if (!$memberExist){
 					$webhook = WhatsappWebhook::where("to", $mobile)->orderBy("created_at", "desc")->first();
 
-					$memberCreat = ChurchMember::create([
-						"nickname" => $webhook->profile_name,
-						"mobile" => $mobile, 
-					]);
+					$array = [];
+					$array["nickname"] = $webhook->profile_name;
+					$memberCreate = ChurchMember::createMember($array, $mobile);
 
 					$registration = ServiceRegistation::create([
 						"name" => $webhook->profile_name,

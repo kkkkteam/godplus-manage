@@ -33,21 +33,11 @@
                 color: red;
                 font-weight: 600;
             }
-            button#summary{
-                position: absolute;
-                top: 3.5%;
-                right: 25%;
-            }
-            @media screen and (max-width: 500px) {
-                button#summary{
-                    top: 3px;
-                    right: 5px;
-                }
-            }
         </style>
     </head>
 
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
+@include('admin.layout.menu')
         <form id="summaryForm">
             <h3>崇拜出席</h3>
             <p>日期時間: <b>{{$service->start_at}}</b>  |  講題:{{$service->title}} ({{ $service->speaker }}) </button><p>
@@ -72,7 +62,7 @@
                 <small class="newcomer">** 紅色：新朋友</small>
             </div>
         </form>
-        <button id="summary" style="float:right; z-index:1000;" class="btn btn-danger" onclick="goSummary()">以場次排序</button>
+        <button id="summary" class="btn btn-danger summary-btn" onclick="goSummary()">以場次排序</button>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js?v=4"></script>
         <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.dataTables.css" />
         <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>

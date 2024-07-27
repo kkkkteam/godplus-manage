@@ -19,29 +19,18 @@
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap" rel="stylesheet">
         <style>
             form{
-                max-width:1000px;
+                max-width:2000px;
                 position: relative;
             }
 
             .dt-search{
                 padding-bottom:5px;
             }
-            button#summary{
-                position: absolute;
-                top: 3.5%;
-                right: 25%;
-            }
-            @media screen and (max-width: 500px) {
-                button#summary{
-                    top: 3px;
-                    right: 5px;
-                }
-            }
-
         </style>
     </head>
 
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
+@include('admin.layout.menu')
         <form id="summaryForm">
             <h3 style="color:blue;">人次出席</h3>
             <div class='row'>
@@ -67,7 +56,7 @@
                 </div>
             </div>
         </form>
-        <button id="summary" style="float:right; z-index:1000;" class="btn btn-danger" onclick="goSummary()">以場次排序</button>
+        <button id="summary"  class="btn btn-danger summary-btn" onclick="goSummary()">以場次排序</button>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js?v=4"></script>
         <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.dataTables.css" />
         <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>

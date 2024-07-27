@@ -28,22 +28,11 @@
             red{
                 color:#990000;
             }
-            button#people{
-                position: absolute;
-                top: 3%;
-                right: 25%;
-            }
-            @media screen and (max-width: 500px) {
-                button#people{
-                    top: 3px;
-                    right: 5px;
-                }
-            }
- 
         </style>
     </head>
 
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
+@include('admin.layout.menu')
         <form id="summaryForm">
             <h3>GodPlus 崇拜 <red>統計</red></h3>
             <div class='row'>
@@ -73,7 +62,7 @@
                 </div>
             </div>
         </form>
-        <button id="people" style="float:right; z-index:1000;" class="btn btn-primary" onclick="goPoeple()">以會員排序</button>
+        <button id="people"  class="btn btn-primary summary-btn" onclick="goPoeple()">以會員排序</button>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js?v=4"></script>
         <link rel="stylesheet" href="https://cdn.datatables.net/2.0.5/css/dataTables.dataTables.css" />
         <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
@@ -105,6 +94,7 @@
                         {targets:0, width:"20px"},
                         {targets:1, width:"200px"},
                         {targets:2, width:"150px"},
+                        {targets:5, visible:false},
                     ],
 
                 });

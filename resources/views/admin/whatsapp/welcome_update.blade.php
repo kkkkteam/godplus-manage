@@ -35,6 +35,7 @@
         </style>
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
+ @include('admin.layout.menu')
         <form id="updateForm">
             <h3>Welcome Message：[ {{ $times }} ] 更新</h3>
             <div>

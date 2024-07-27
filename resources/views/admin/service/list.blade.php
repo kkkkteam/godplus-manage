@@ -36,7 +36,7 @@
         </style>
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50 center">
-<!-- @include('admin.layout.menu') -->
+@include('admin.layout.menu')
         <form id="commandForm">
             <h3>GodPlus+ 崇拜 list</h3>
             <div class="name-input">

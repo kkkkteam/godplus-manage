@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminContorller;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\NewcomerController;
 
 
 Route::prefix('/member')
@@ -18,7 +19,6 @@ Route::prefix('/member')
         Route::get('/service/success', [ServiceController::class, 'serviceRegisterSuccessView'])->name('service.success.html');
         
 });
-
 
 Route::prefix('/admin')
     ->name('admin.')
@@ -75,20 +75,30 @@ Route::prefix('/admin')
                 Route::post('/attendance/detele', [ServiceController::class, 'attendanceDeteleAPI'])->name('attendance.detele.api');
                 
                 Route::get('/attendance-summary', [ServiceController::class, 'attendanceSummaryView'])->name('attendance_summary.html');
-                Route::get('/attendance/summary/data', [ServiceController::class, 'attendanceSummaryAPI'])->name('attendance.summary.api');
+                Route::get('/attendance-summary/summary/data', [ServiceController::class, 'attendanceSummaryAPI'])->name('attendance.summary.api');
 
-                Route::get('/attendance/select-one/{service_slug}', [ServiceController::class, 'attendanceServiceView'])->name('attendance.select.html');
-                Route::get('/attendance/detail', [ServiceController::class, 'attendanceServiceAPI'])->name('attendance.detail.api');
+                Route::get('/attendance-summary/select-one/{service_slug}', [ServiceController::class, 'attendanceServiceView'])->name('attendance.select.html');
+                Route::get('/attendance-summary/detail', [ServiceController::class, 'attendanceServiceAPI'])->name('attendance.detail.api');
                 
                 Route::get('/attendance-summary/by-people', [ServiceController::class, 'attendanceServiceByPoepleView'])->name('attendance.by.poeple.html');
-                Route::get('/attendance/by-people/data', [ServiceController::class, 'attendanceServiceByPoepleAPI'])->name('attendance.by.poeple.api');
+                Route::get('/attendance-summary/by-people/data', [ServiceController::class, 'attendanceServiceByPoepleAPI'])->name('attendance.by.poeple.api');
 
                 Route::get('/scan/qr-code', [ServiceController::class, 'scannerView'])->name('scan.html');
                 Route::post('/scan/show-list', [ServiceController::class, 'showRegistrationListAPI'])->name('scan.show.registration.api');
                 Route::post('/scan/attend-list', [ServiceController::class, 'makeAttendanceListAPI'])->name('scan.make.attendance.api');
 
-
         });
+
+
+
+        Route::prefix('/newcomer')
+            ->name('newcomer.')
+            ->group(function(){
+
+                Route::get('/', [NewcomerController::class, 'newcomerListView'])->name('list.html');
+                Route::get('/list', [NewcomerController::class, 'getNewcomerListAPI'])->name('get.list.api');
+
+            });
 
 });
 

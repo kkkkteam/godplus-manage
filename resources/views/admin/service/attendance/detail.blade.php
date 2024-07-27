@@ -40,6 +40,7 @@
 @include('admin.layout.menu')
         <form id="summaryForm">
             <h3>崇拜出席</h3>
+            <div class="mobile space"></div>
             <p>日期時間: <b>{{$service->start_at}}</b>  |  講題:{{$service->title}} ({{ $service->speaker }}) </button><p>
             <p>出席人數: {{ $attendance }} </p>
             <div class='row'>

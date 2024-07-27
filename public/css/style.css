@@ -45,6 +45,14 @@ form {
     padding-bottom: 5%;
 }
 
+.mobile{
+    display:none;
+}
+
+.space{
+    height:5%;
+}
+
 @media screen and (max-width: 500px) {
     body {
         padding: 0px;
@@ -55,7 +63,13 @@ form {
         height: 100vh;
         overflow-y: scroll;
     }
+    
+    .mobile{
+        display:block;
+    }
 }
+
+
 
 label {
     display: block;
@@ -190,7 +204,7 @@ a.active {
         left: -19.5rem;
     }
 
-    nav. navbar{
+    .navbar{
         display: none;
     }
 
